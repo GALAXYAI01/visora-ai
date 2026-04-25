@@ -1,0 +1,12 @@
+<svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
+  <!-- Certificate background -->
+  <rect x="20" y="15" width="240" height="130" rx="12" fill="#111827" stroke="#D97706" stroke-width="1.5" opacity="0.9"/>
+  <rect x="28" y="23" width="224" height="114" rx="8" fill="none" stroke="#D97706" stroke-width="0.5" opacity="0.4"/>
+  <!-- Star badge -->
+  <circle cx="140" cy="55" r="22" fill="#1A1205" stroke="#D97706" stroke-width="1.5"/>
+  <text x="140" y="61" text-anchor="middle" font-size="20" fill="#D97706">★</text>
+  <!-- Text lines -->
+  <text x="140" y="95" text-anchor="middle" fill="white" font-size="13" font-family="sans-serif" font-weight="700">Visora Certified</text>
+  <text x="140" y="112" text-anchor="middle" fill="#D97706" font-size="10" font-family="sans-serif">Low Bias Risk — Tier 1</text>
+  <text x="140" y="130" text-anchor="middle" fill="#6B7280" font-size="8" font-family="sans-serif">AUDIT ID: VS-2026-CERTIFIED</text>
+</svg>
