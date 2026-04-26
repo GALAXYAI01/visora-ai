@@ -483,8 +483,6 @@ class _ProfileSheet extends StatelessWidget {
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         Container(margin: const EdgeInsets.only(top: 12, bottom: 16), width: 40, height: 4,
           decoration: BoxDecoration(color: VisoraColors.outlineVariant, borderRadius: BorderRadius.circular(2))),
-
-        // Avatar + Name
         Container(
           width: 72, height: 72,
           decoration: BoxDecoration(
@@ -503,20 +501,30 @@ class _ProfileSheet extends StatelessWidget {
           decoration: BoxDecoration(color: VisoraColors.primaryContainer, borderRadius: BorderRadius.circular(12)),
           child: Text('Admin', style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: VisoraColors.primary)),
         ),
-
         const SizedBox(height: 24),
         const Divider(height: 1),
-
-        // Menu items
-        _ProfileMenuItem(icon: Icons.person_outline_rounded, label: 'Edit Profile', onTap: () => Navigator.pop(context)),
-        _ProfileMenuItem(icon: Icons.settings_outlined, label: 'Settings', onTap: () => Navigator.pop(context)),
-        _ProfileMenuItem(icon: Icons.shield_outlined, label: 'Security & Privacy', onTap: () => Navigator.pop(context)),
-        _ProfileMenuItem(icon: Icons.help_outline_rounded, label: 'Help & Support', onTap: () => Navigator.pop(context)),
-
+        _ProfileMenuItem(icon: Icons.person_outline_rounded, label: 'Edit Profile', onTap: () {
+          Navigator.pop(context);
+          showModalBottomSheet(context: context, backgroundColor: Colors.transparent, isScrollControlled: true,
+            builder: (_) => _EditProfileSheet(userName: userName));
+        }),
+        _ProfileMenuItem(icon: Icons.settings_outlined, label: 'Settings', onTap: () {
+          Navigator.pop(context);
+          showModalBottomSheet(context: context, backgroundColor: Colors.transparent, isScrollControlled: true,
+            builder: (_) => const _SettingsSheet());
+        }),
+        _ProfileMenuItem(icon: Icons.shield_outlined, label: 'Security & Privacy', onTap: () {
+          Navigator.pop(context);
+          showModalBottomSheet(context: context, backgroundColor: Colors.transparent, isScrollControlled: true,
+            builder: (_) => const _SecuritySheet());
+        }),
+        _ProfileMenuItem(icon: Icons.help_outline_rounded, label: 'Help & Support', onTap: () {
+          Navigator.pop(context);
+          showModalBottomSheet(context: context, backgroundColor: Colors.transparent, isScrollControlled: true,
+            builder: (_) => const _HelpSheet());
+        }),
         const Divider(height: 1),
         const SizedBox(height: 8),
-
-        // Logout
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           child: SizedBox(
@@ -557,3 +565,294 @@ class _ProfileMenuItem extends StatelessWidget {
     );
   }
 }
+
+// ── Edit Profile Sheet ──
+class _EditProfileSheet extends StatefulWidget {
+  final String userName;
+  const _EditProfileSheet({required this.userName});
+  @override
+  State<_EditProfileSheet> createState() => _EditProfileSheetState();
+}
+
+class _EditProfileSheetState extends State<_EditProfileSheet> {
+  late final TextEditingController _nameCtrl;
+  late final TextEditingController _emailCtrl;
+  final _oldPwCtrl = TextEditingController();
+  final _newPwCtrl = TextEditingController();
+  bool _saved = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameCtrl = TextEditingController(text: widget.userName);
+    _emailCtrl = TextEditingController(text: '${widget.userName}@visora.ai');
+  }
+
+  @override
+  void dispose() { _nameCtrl.dispose(); _emailCtrl.dispose(); _oldPwCtrl.dispose(); _newPwCtrl.dispose(); super.dispose(); }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      decoration: const BoxDecoration(color: VisoraColors.background,
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
+            decoration: BoxDecoration(color: VisoraColors.outlineVariant, borderRadius: BorderRadius.circular(2))),
+          Row(children: [
+            const Icon(Icons.person_outline_rounded, color: VisoraColors.primary),
+            const SizedBox(width: 10),
+            Text('Edit Profile', style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w700, color: VisoraColors.onSurface)),
+          ]),
+          const SizedBox(height: 20),
+          _field('Display Name', _nameCtrl, Icons.badge_outlined),
+          const SizedBox(height: 14),
+          _field('Email', _emailCtrl, Icons.email_outlined),
+          const SizedBox(height: 20),
+          Divider(color: VisoraColors.outlineVariant),
+          const SizedBox(height: 12),
+          Text('Change Password', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: VisoraColors.onSurface)),
+          const SizedBox(height: 12),
+          _field('Current Password', _oldPwCtrl, Icons.lock_outline, obscure: true),
+          const SizedBox(height: 14),
+          _field('New Password', _newPwCtrl, Icons.lock_reset_rounded, obscure: true),
+          const SizedBox(height: 24),
+          SizedBox(width: double.infinity, height: 48,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                setState(() => _saved = true);
+                Future.delayed(const Duration(seconds: 2), () { if (mounted) Navigator.pop(context); });
+              },
+              icon: Icon(_saved ? Icons.check_circle : Icons.save_rounded, color: Colors.white, size: 18),
+              label: Text(_saved ? 'Saved Successfully!' : 'Save Changes',
+                style: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _saved ? const Color(0xFF34A853) : VisoraColors.primary,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), elevation: 0),
+            ),
+          ),
+        ]),
+      ),
+    );
+  }
+
+  Widget _field(String label, TextEditingController ctrl, IconData icon, {bool obscure = false}) {
+    return TextField(
+      controller: ctrl, obscureText: obscure,
+      style: GoogleFonts.inter(fontSize: 14, color: VisoraColors.onSurface),
+      decoration: InputDecoration(
+        labelText: label, labelStyle: GoogleFonts.inter(fontSize: 13, color: VisoraColors.onSurfaceVariant),
+        prefixIcon: Icon(icon, size: 20, color: VisoraColors.onSurfaceVariant),
+        filled: true, fillColor: VisoraColors.surfaceLowest,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: VisoraColors.outlineVariant)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: VisoraColors.outlineVariant)),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: VisoraColors.primary, width: 1.5)),
+      ),
+    );
+  }
+}
+
+// ── Settings Sheet ──
+class _SettingsSheet extends StatefulWidget {
+  const _SettingsSheet();
+  @override
+  State<_SettingsSheet> createState() => _SettingsSheetState();
+}
+
+class _SettingsSheetState extends State<_SettingsSheet> {
+  bool _darkMode = false;
+  bool _notifications = true;
+  bool _autoScan = true;
+  bool _analytics = false;
+  String _language = 'English';
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(color: VisoraColors.background,
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
+            decoration: BoxDecoration(color: VisoraColors.outlineVariant, borderRadius: BorderRadius.circular(2))),
+          Row(children: [
+            const Icon(Icons.settings_outlined, color: VisoraColors.primary),
+            const SizedBox(width: 10),
+            Text('Settings', style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w700, color: VisoraColors.onSurface)),
+          ]),
+          const SizedBox(height: 20),
+          _toggle('Dark Mode', 'Switch to dark theme', Icons.dark_mode_outlined, _darkMode, (v) => setState(() => _darkMode = v)),
+          _toggle('Push Notifications', 'Receive bias alerts', Icons.notifications_outlined, _notifications, (v) => setState(() => _notifications = v)),
+          _toggle('Auto-Scan Uploads', 'Automatically scan new datasets', Icons.auto_fix_high, _autoScan, (v) => setState(() => _autoScan = v)),
+          _toggle('Usage Analytics', 'Share anonymous usage data', Icons.analytics_outlined, _analytics, (v) => setState(() => _analytics = v)),
+          const SizedBox(height: 8),
+          ListTile(
+            leading: const Icon(Icons.language, color: VisoraColors.onSurfaceVariant, size: 22),
+            title: Text('Language', style: GoogleFonts.inter(fontSize: 14, color: VisoraColors.onSurface)),
+            trailing: DropdownButton<String>(
+              value: _language, underline: const SizedBox(),
+              style: GoogleFonts.inter(fontSize: 13, color: VisoraColors.primary),
+              items: ['English', 'Spanish', 'French', 'German', 'Hindi'].map((l) => DropdownMenuItem(value: l, child: Text(l))).toList(),
+              onChanged: (v) => setState(() => _language = v!),
+            ),
+          ),
+          const SizedBox(height: 16),
+        ]),
+      ),
+    );
+  }
+
+  Widget _toggle(String title, String sub, IconData icon, bool val, ValueChanged<bool> onChanged) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: SwitchListTile(
+        secondary: Icon(icon, color: VisoraColors.onSurfaceVariant, size: 22),
+        title: Text(title, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500, color: VisoraColors.onSurface)),
+        subtitle: Text(sub, style: GoogleFonts.inter(fontSize: 12, color: VisoraColors.onSurfaceVariant)),
+        value: val, onChanged: onChanged, activeColor: VisoraColors.primary,
+      ),
+    );
+  }
+}
+
+// ── Security & Privacy Sheet ──
+class _SecuritySheet extends StatefulWidget {
+  const _SecuritySheet();
+  @override
+  State<_SecuritySheet> createState() => _SecuritySheetState();
+}
+
+class _SecuritySheetState extends State<_SecuritySheet> {
+  bool _twoFactor = true;
+  bool _biometric = false;
+  bool _encryptExports = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(color: VisoraColors.background,
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
+            decoration: BoxDecoration(color: VisoraColors.outlineVariant, borderRadius: BorderRadius.circular(2))),
+          Row(children: [
+            const Icon(Icons.shield_outlined, color: VisoraColors.primary),
+            const SizedBox(width: 10),
+            Text('Security & Privacy', style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w700, color: VisoraColors.onSurface)),
+          ]),
+          const SizedBox(height: 20),
+          // Security info card
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(color: const Color(0xFF34A853).withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFF34A853).withValues(alpha: 0.3))),
+            child: Row(children: [
+              const Icon(Icons.verified_user_rounded, color: Color(0xFF34A853), size: 32),
+              const SizedBox(width: 12),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text('AES-256 Encryption Active', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: const Color(0xFF34A853))),
+                const SizedBox(height: 2),
+                Text('All data is encrypted end-to-end', style: GoogleFonts.inter(fontSize: 12, color: VisoraColors.onSurfaceVariant)),
+              ])),
+            ]),
+          ),
+          const SizedBox(height: 16),
+          _secToggle('Two-Factor Auth', '2FA via authenticator app', Icons.security, _twoFactor, (v) => setState(() => _twoFactor = v)),
+          _secToggle('Biometric Login', 'Use fingerprint or face ID', Icons.fingerprint, _biometric, (v) => setState(() => _biometric = v)),
+          _secToggle('Encrypt Exports', 'Encrypt all PDF & CSV exports', Icons.enhanced_encryption_outlined, _encryptExports, (v) => setState(() => _encryptExports = v)),
+          const SizedBox(height: 12),
+          const Divider(),
+          const SizedBox(height: 8),
+          _infoRow('Session', 'Active — expires in 23h'),
+          _infoRow('Last Login', 'Today at ${TimeOfDay.now().format(context)}'),
+          _infoRow('Login IP', '192.168.1.***'),
+          _infoRow('Encryption', 'AES-256-GCM'),
+          const SizedBox(height: 16),
+        ]),
+      ),
+    );
+  }
+
+  Widget _secToggle(String t, String s, IconData i, bool v, ValueChanged<bool> c) {
+    return SwitchListTile(
+      secondary: Icon(i, color: VisoraColors.onSurfaceVariant, size: 22),
+      title: Text(t, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500, color: VisoraColors.onSurface)),
+      subtitle: Text(s, style: GoogleFonts.inter(fontSize: 12, color: VisoraColors.onSurfaceVariant)),
+      value: v, onChanged: c, activeColor: VisoraColors.primary,
+    );
+  }
+
+  Widget _infoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+      child: Row(children: [
+        Text(label, style: GoogleFonts.inter(fontSize: 13, color: VisoraColors.onSurfaceVariant)),
+        const Spacer(),
+        Text(value, style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w500, color: VisoraColors.onSurface)),
+      ]),
+    );
+  }
+}
+
+// ── Help & Support Sheet ──
+class _HelpSheet extends StatelessWidget {
+  const _HelpSheet();
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(color: VisoraColors.background,
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
+            decoration: BoxDecoration(color: VisoraColors.outlineVariant, borderRadius: BorderRadius.circular(2))),
+          Row(children: [
+            const Icon(Icons.help_outline_rounded, color: VisoraColors.primary),
+            const SizedBox(width: 10),
+            Text('Help & Support', style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w700, color: VisoraColors.onSurface)),
+          ]),
+          const SizedBox(height: 20),
+          _faqItem('How do I run a bias audit?', 'Navigate to the Home tab and click "New Audit." Upload a CSV dataset, and Visora will automatically analyze it for disparate impact, statistical parity, and other fairness metrics.'),
+          _faqItem('What file formats are supported?', 'Visora supports CSV files for dataset audits. For text scanning, simply paste any text — job listings, policies, model outputs — into the Scanner tab.'),
+          _faqItem('How is my data protected?', 'All data is encrypted with AES-256-GCM both at rest and in transit. Session tokens are hashed, and no raw data is stored on external servers.'),
+          _faqItem('Can I export audit reports?', 'Yes! After any audit completes, click "Download Report" to get a compliance-ready PDF with findings, visualizations, and remediation recommendations.'),
+          _faqItem('What fairness metrics does Visora use?', 'Visora computes Disparate Impact Ratio, Statistical Parity, Equalized Odds, Equal Opportunity, and Calibration metrics across all protected groups.'),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(color: VisoraColors.primaryContainer.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(12)),
+            child: Row(children: [
+              const Icon(Icons.email_outlined, color: VisoraColors.primary),
+              const SizedBox(width: 12),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text('Contact Support', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: VisoraColors.onSurface)),
+                Text('support@visora.ai', style: GoogleFonts.inter(fontSize: 12, color: VisoraColors.primary)),
+              ])),
+            ]),
+          ),
+          const SizedBox(height: 8),
+          Text('Visora AI v1.0.0', style: GoogleFonts.inter(fontSize: 11, color: VisoraColors.onSurfaceVariant)),
+          const SizedBox(height: 16),
+        ]),
+      ),
+    );
+  }
+
+  Widget _faqItem(String q, String a) {
+    return ExpansionTile(
+      tilePadding: EdgeInsets.zero,
+      title: Text(q, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500, color: VisoraColors.onSurface)),
+      childrenPadding: const EdgeInsets.only(bottom: 12),
+      children: [Text(a, style: GoogleFonts.inter(fontSize: 13, color: VisoraColors.onSurfaceVariant, height: 1.5))],
+    );
+  }
+}
+
