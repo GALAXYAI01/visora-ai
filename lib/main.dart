@@ -17,6 +17,7 @@ import 'screens/text_scanner_screen.dart';
 import 'widgets/bottom_nav.dart';
 import 'services/encryption_service.dart';
 import 'services/auth_provider.dart';
+import 'services/settings_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -88,12 +89,17 @@ class _VisoraAppState extends ConsumerState<VisoraApp> {
   Widget build(BuildContext context) {
     // Watch auth state to trigger router rebuilds on login/logout
     ref.watch(authProvider);
+    // Watch settings for live theme switching
+    final settings = ref.watch(settingsProvider);
 
     return MaterialApp.router(
       title: 'Visora',
       debugShowCheckedModeBanner: false,
       theme: VisoraTheme.light,
+      darkTheme: VisoraTheme.dark,
+      themeMode: settings.themeMode,
       routerConfig: _router,
     );
   }
 }
+

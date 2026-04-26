@@ -152,8 +152,77 @@ class VisoraTheme {
     );
   }
 
-  // Keep backward compatibility
-  static ThemeData get dark => light;
+  // ── Real Dark Theme ──
+  static ThemeData get dark {
+    final base = ThemeData.dark();
+    return base.copyWith(
+      scaffoldBackgroundColor: const Color(0xFF121212),
+      colorScheme: const ColorScheme.dark(
+        primary: Color(0xFF8AB4F8),
+        primaryContainer: Color(0xFF1A3A5C),
+        secondary: Color(0xFF9AA0A6),
+        tertiary: Color(0xFF81C995),
+        error: Color(0xFFFF6B6B),
+        surface: Color(0xFF1E1E1E),
+        onPrimary: Color(0xFF121212),
+        onSurface: Color(0xFFE8EAED),
+        onError: Color(0xFF121212),
+      ),
+      textTheme: TextTheme(
+        displayLarge:  GoogleFonts.inter(fontSize: 56, fontWeight: FontWeight.w700, color: const Color(0xFFE8EAED)),
+        displayMedium: GoogleFonts.inter(fontSize: 45, fontWeight: FontWeight.w700, color: const Color(0xFFE8EAED)),
+        displaySmall:  GoogleFonts.inter(fontSize: 36, fontWeight: FontWeight.w700, color: const Color(0xFFE8EAED)),
+        headlineLarge: GoogleFonts.inter(fontSize: 32, fontWeight: FontWeight.w700, color: const Color(0xFFE8EAED)),
+        headlineMedium:GoogleFonts.inter(fontSize: 28, fontWeight: FontWeight.w700, color: const Color(0xFFE8EAED)),
+        headlineSmall: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.w700, color: const Color(0xFFE8EAED)),
+        titleLarge:    GoogleFonts.inter(fontSize: 22, fontWeight: FontWeight.w600, color: const Color(0xFFE8EAED)),
+        titleMedium:   GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w600, color: const Color(0xFFE8EAED)),
+        titleSmall:    GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: const Color(0xFFE8EAED)),
+        bodyLarge:     GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w400, color: const Color(0xFFE8EAED)),
+        bodyMedium:    GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w400, color: const Color(0xFF9AA0A6)),
+        bodySmall:     GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w400, color: const Color(0xFF9AA0A6)),
+        labelLarge:    GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: const Color(0xFFE8EAED)),
+        labelMedium:   GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: const Color(0xFF9AA0A6), letterSpacing: 0.5),
+        labelSmall:    GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: const Color(0xFF9AA0A6), letterSpacing: 1.0),
+      ),
+      appBarTheme: AppBarTheme(
+        backgroundColor: const Color(0xFF1E1E1E), elevation: 0, scrolledUnderElevation: 1,
+        titleTextStyle: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.w700, color: const Color(0xFFE8EAED)),
+        iconTheme: const IconThemeData(color: Color(0xFFE8EAED)),
+      ),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: Color(0xFF1E1E1E),
+        selectedItemColor: Color(0xFF8AB4F8),
+        unselectedItemColor: Color(0xFF9AA0A6),
+        type: BottomNavigationBarType.fixed, elevation: 0,
+      ),
+      cardTheme: CardThemeData(
+        color: const Color(0xFF1E1E1E), elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: const BorderSide(color: Color(0xFF333333), width: 1),
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF8AB4F8),
+          foregroundColor: const Color(0xFF121212), elevation: 0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9999)),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+          textStyle: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w600),
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true, fillColor: const Color(0xFF2A2A2A),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Color(0xFF444444))),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Color(0xFF444444))),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Color(0xFF8AB4F8), width: 2)),
+        labelStyle: GoogleFonts.inter(color: const Color(0xFF9AA0A6)),
+        hintStyle: GoogleFonts.inter(color: const Color(0xFF9AA0A6)),
+      ),
+      dividerColor: const Color(0xFF333333),
+    );
+  }
 
   static TextTheme get _textTheme => TextTheme(
     displayLarge:  GoogleFonts.inter(fontSize: 56, fontWeight: FontWeight.w700, color: VisoraColors.onSurface),
