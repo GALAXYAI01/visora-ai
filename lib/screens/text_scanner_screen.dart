@@ -38,7 +38,6 @@ class _TextScannerScreenState extends ConsumerState<TextScannerScreen> {
     final loading = ref.watch(_scanLoadingProvider);
 
     return Scaffold(
-      backgroundColor: VisoraColors.background,
       body: SafeArea(
         child: Stack(fit: StackFit.expand, children: [
           SingleChildScrollView(

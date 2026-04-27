@@ -89,7 +89,6 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
   Widget build(BuildContext context) {
     final upload = ref.watch(uploadProvider);
     return Scaffold(
-      backgroundColor: VisoraColors.background,
       body: SafeArea(
         child: Stack(fit: StackFit.expand, children: [
           SingleChildScrollView(

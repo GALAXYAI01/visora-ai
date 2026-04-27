@@ -22,7 +22,6 @@ class _SimulationScreenState extends ConsumerState<SimulationScreen> {
   Widget build(BuildContext context) {
     final sim = ref.watch(simulationProvider);
     return Scaffold(
-      backgroundColor: VisoraColors.background,
       body: SafeArea(
         child: Stack(fit: StackFit.expand, children: [
           SingleChildScrollView(

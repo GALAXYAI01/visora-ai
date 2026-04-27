@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 import 'gemini_chatbot.dart';
+import 'profile_drawer.dart';
+import '../services/auth_provider.dart';
 
-class MainShell extends StatelessWidget {
+class MainShell extends ConsumerWidget {
   final Widget child;
   const MainShell({super.key, required this.child});
 
@@ -16,14 +19,32 @@ class MainShell extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final location = GoRouterState.of(context).uri.toString();
     final idx = _locationToIndex(location);
+    final auth = ref.watch(authProvider);
+    final initials = (auth.userName ?? 'U')[0].toUpperCase();
+
     return Scaffold(
-      backgroundColor: VisoraColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
           Positioned.fill(child: child),
+          // Profile avatar — top right, works on every page
+          Positioned(
+            right: 16, top: MediaQuery.of(context).padding.top + 8,
+            child: GestureDetector(
+              onTap: () => showProfileDrawer(context, ref),
+              child: Container(
+                width: 40, height: 40,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(colors: [Color(0xFF4285F4), Color(0xFF1A73E8)]),
+                  shape: BoxShape.circle,
+                  boxShadow: [BoxShadow(color: VisoraColors.primary.withValues(alpha: 0.3), blurRadius: 8)]),
+                child: Center(child: Text(initials, style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white))),
+              ),
+            ),
+          ),
           // Gemini chatbot FAB
           Positioned(
             right: 16, bottom: 152,
@@ -91,8 +112,8 @@ class _BottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: VisoraColors.surfaceLowest,
-        border: Border(top: BorderSide(color: VisoraColors.surface, width: 1)),
+        color: Theme.of(context).colorScheme.surface,
+        border: Border(top: BorderSide(color: Theme.of(context).dividerColor, width: 1)),
         boxShadow: [
           BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 12, offset: const Offset(0, -4)),
         ],
@@ -125,6 +146,7 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
@@ -141,12 +163,12 @@ class _NavItem extends StatelessWidget {
                 width: 64, height: 32,
                 decoration: active
                   ? BoxDecoration(
-                      color: VisoraColors.primaryContainer,
+                      color: cs.primaryContainer,
                       borderRadius: BorderRadius.circular(9999),
                     )
                   : null,
                 child: Icon(icon,
-                  color: active ? VisoraColors.primary : VisoraColors.onSurfaceVariant,
+                  color: active ? cs.primary : cs.onSurface.withValues(alpha: 0.5),
                   size: 24),
               ),
               const SizedBox(height: 4),
@@ -155,7 +177,7 @@ class _NavItem extends StatelessWidget {
                 style: GoogleFonts.inter(
                   fontSize: 10,
                   fontWeight: active ? FontWeight.w600 : FontWeight.w500,
-                  color: active ? VisoraColors.primary : VisoraColors.onSurfaceVariant,
+                  color: active ? cs.primary : cs.onSurface.withValues(alpha: 0.5),
                 ),
               ),
             ],

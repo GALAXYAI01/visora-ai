@@ -65,7 +65,6 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen> with TickerProv
     ];
 
     return Scaffold(
-      backgroundColor: VisoraColors.background,
       body: SafeArea(
         child: Stack(fit: StackFit.expand, children: [
           // Top progress bar

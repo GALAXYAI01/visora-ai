@@ -19,11 +19,9 @@ class ResultsScreen extends ConsumerWidget {
         ref.read(auditResultProvider.notifier).state = _demoResult;
       });
       return Scaffold(
-        backgroundColor: VisoraColors.background,
         body: const Center(child: CircularProgressIndicator(color: VisoraColors.primary)));
     }
     return Scaffold(
-      backgroundColor: VisoraColors.background,
       body: SafeArea(
         child: Stack(fit: StackFit.expand, children: [
           SingleChildScrollView(

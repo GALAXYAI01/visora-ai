@@ -80,6 +80,23 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
+  /// Change password for the current user
+  Future<bool> changePassword(String oldPassword, String newPassword) async {
+    final user = state.userName?.toLowerCase();
+    if (user == null) return false;
+    final oldHash = EncryptionService.hashPassword(oldPassword);
+    if (_validCredentials[user] != oldHash) return false;
+    _validCredentials[user] = EncryptionService.hashPassword(newPassword);
+    return true;
+  }
+
+  /// Update display name
+  void updateUserName(String newName) {
+    if (newName.trim().isEmpty) return;
+    state = state.copyWith(userName: newName.trim());
+  }
+
+
   /// Restore session from encrypted SharedPreferences
   Future<void> restoreSession() async {
     try {

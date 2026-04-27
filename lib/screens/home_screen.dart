@@ -65,7 +65,6 @@ class HomeScreen extends ConsumerWidget {
     final dateStr = DateFormat('EEEE, MMMM d').format(now);
 
     return Scaffold(
-      backgroundColor: VisoraColors.background,
       body: SafeArea(
         child: Stack(fit: StackFit.expand, children: [
           SingleChildScrollView(

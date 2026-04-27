@@ -24,7 +24,6 @@ class RemediationScreen extends ConsumerWidget {
     final accAfter  = hasResult ? result.accuracyAfter : 0.85;
 
     return Scaffold(
-      backgroundColor: VisoraColors.background,
       body: SafeArea(
         child: Stack(fit: StackFit.expand, children: [
           SingleChildScrollView(

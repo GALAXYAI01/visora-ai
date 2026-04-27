@@ -15,7 +15,6 @@ class HumanCostScreen extends ConsumerWidget {
     final result = ref.watch(auditResultProvider);
 
     return Scaffold(
-      backgroundColor: VisoraColors.background,
       body: SafeArea(
         child: Stack(fit: StackFit.expand, children: [
           SingleChildScrollView(
