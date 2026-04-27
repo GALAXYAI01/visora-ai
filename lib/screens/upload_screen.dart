@@ -394,6 +394,7 @@ class _ConfigurePanel extends StatelessWidget {
             decoration: const InputDecoration(prefixIcon: Icon(Icons.people_outline_rounded)),
             items: const [
               DropdownMenuItem(value: 'sex', child: Text('Sex')),
+              DropdownMenuItem(value: 'gender', child: Text('Gender')),
               DropdownMenuItem(value: 'race', child: Text('Race')),
               DropdownMenuItem(value: 'age', child: Text('Age')),
             ],
@@ -407,6 +408,7 @@ class _ConfigurePanel extends StatelessWidget {
             runSpacing: 8,
             children: [
               _AttributeChip(label: 'Sex', value: 'sex', selected: upload.protectedAttr == 'sex', onSelected: onProtectedChanged),
+              _AttributeChip(label: 'Gender', value: 'gender', selected: upload.protectedAttr == 'gender', onSelected: onProtectedChanged),
               _AttributeChip(label: 'Race', value: 'race', selected: upload.protectedAttr == 'race', onSelected: onProtectedChanged),
               _AttributeChip(label: 'Age', value: 'age', selected: upload.protectedAttr == 'age', onSelected: onProtectedChanged),
             ],
@@ -418,9 +420,9 @@ class _ConfigurePanel extends StatelessWidget {
             value: upload.targetCol,
             decoration: const InputDecoration(prefixIcon: Icon(Icons.flag_outlined)),
             items: const [
-              DropdownMenuItem(value: 'income', child: Text('Income')),
               DropdownMenuItem(value: 'approved', child: Text('Approved')),
               DropdownMenuItem(value: 'hired', child: Text('Hired')),
+              DropdownMenuItem(value: 'income', child: Text('Income')),
               DropdownMenuItem(value: 'score', child: Text('Score')),
             ],
             onChanged: (value) {

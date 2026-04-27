@@ -25,7 +25,7 @@ class UploadState {
     this.fileBytes,
     this.rowCount,
     this.protectedAttr = 'sex',
-    this.targetCol = 'income',
+    this.targetCol = 'approved',
     this.error,
   });
 

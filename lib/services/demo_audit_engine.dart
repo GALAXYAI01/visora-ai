@@ -239,8 +239,17 @@ class DemoAuditEngine {
   static bool _parseTarget(String value) {
     final v = value.toLowerCase().trim();
     // Common positive outcome markers
-    return v == '1' || v == 'yes' || v == 'true' || v == '>50k' || 
-           v == 'approved' || v == 'accept' || v == 'positive' || v == 'granted';
+    if (v == '1' || v == 'yes' || v == 'true' || v == '>50k' || 
+        v == 'approved' || v == 'accept' || v == 'positive' || v == 'granted' ||
+        v == 'hired' || v == 'passed' || v == 'success') return true;
+    // Common negative markers
+    if (v == '0' || v == 'no' || v == 'false' || v == '<=50k' ||
+        v == 'denied' || v == 'reject' || v == 'negative' || v == 'rejected' ||
+        v == 'not hired' || v == 'failed' || v == 'failure') return false;
+    // Numeric fallback: any number > 0 is positive
+    final n = double.tryParse(v);
+    if (n != null) return n > 0;
+    return false;
   }
 
   static String _generateExplanation(

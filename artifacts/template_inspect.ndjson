@@ -1,0 +1,63 @@
+{"kind":"deck","id":"pr/g6efyi","name":"Deck"}
+{"kind":"slide","id":"sl/2x4nap4r","slide":2,"title":"Guidelines","textShapes":3}
+{"kind":"textbox","id":"sh/epkzupwb","slide":2,"name":"Google Shape;99;p25","text":"Guidelines","textPreview":"Guidelines","textChars":10,"textLines":1,"bbox":[45.84,92.5,938.9,58.99]}
+{"kind":"textbox","id":"sh/b6xkf6dc","slide":2,"name":"Google Shape;100;p25","text":"Kindly use the given template for submitting your prototype(Make a copy of the template)\nOne team is only required to submit one project.\nFollow this template while preparing your presentation.\nYou are welcome to add as many POCs and design concepts to support your project.\nThe project should be feasible and the team members should be capable enough, to come up with the fully functioning prototype of the same idea, if required.\nIn case of queries, kindly reach out to us at solutionchallengesupport@hack2skill.com","textPreview":"Kindly use the given template for submitting your prototype(Make a copy of the template) | One team is only required to submit one projec...","textChars":517,"textLines":6,"bbox":[64.03,179.66,831.94,267.84]}
+{"kind":"textbox","id":"sh/tcj6tova","slide":2,"name":"Google Shape;102;p25","text":"Note: Prototype must include cloud deployment and use at least one Google AI model or service (e.g., Gemini) as part of the solution.","textPreview":"Note: Prototype must include cloud deployment and use at least one Google AI model or service (e.g., Gemini) as part of the solution.","textChars":133,"textLines":1,"bbox":[6.9,409.15,946.2,67.87]}
+{"kind":"image","id":"im/tsvu9kni","slide":2,"name":"Google Shape;101;p25","bbox":[0,0,960,61.87]}
+{"kind":"notes","id":"nt/2x4nap4r","slide":2,"text":""}
+{"kind":"slide","id":"sl/pg3ex0nu","slide":3,"title":"Team Details","textShapes":1}
+{"kind":"shape","id":"sh/t47y1kre","slide":3,"name":"Google Shape;107;p26","placeholder":"subtitle","bbox":[32.72,297.55,894.55,83.21]}
+{"kind":"textbox","id":"sh/bulwval8","slide":3,"name":"Google Shape;109;p26","text":"Team Details\n\nTeam name: \nTeam leader name: \nProblem Statement: \n","textPreview":"Team Details |  | Team name:  | Team leader name:  | Problem Statement:  |","textChars":65,"textLines":6,"bbox":[15.39,303.99,919.69,210.36]}
+{"kind":"image","id":"im/4fu18jqh","slide":3,"name":"Google Shape;108;p26","bbox":[0,257.1,960,282.9]}
+{"kind":"image","id":"im/x0nuxc3y","slide":3,"name":"Google Shape;110;p26","bbox":[0,0,960,289.69]}
+{"kind":"notes","id":"nt/pg3ex0nu","slide":3,"text":""}
+{"kind":"slide","id":"sl/s72x4nap","slide":4,"title":"Brief about your solution","textShapes":1}
+{"kind":"textbox","id":"sh/1cfa9w3m","slide":4,"name":"Google Shape;115;p27","text":"Brief about your solution","textPreview":"Brief about your solution","textChars":25,"textLines":1,"bbox":[8.98,84.66,938.9,58.99]}
+{"kind":"image","id":"im/7y1kre1w","slide":4,"name":"Google Shape;116;p27","bbox":[0,0,960,61.87]}
+{"kind":"notes","id":"nt/s72x4nap","slide":4,"text":""}
+{"kind":"slide","id":"sl/val87ed8","slide":5,"title":"Opportunities","textShapes":1}
+{"kind":"textbox","id":"sh/qh0fepkz","slide":5,"name":"Google Shape;121;p28","text":"Opportunities\nHow different is it from any of the other existing ideas?\nHow will it be able to solve the problem?\nUSP of the proposed solution\n","textPreview":"Opportunities | How different is it from any of the other existing ideas? | How will it be able to solve the problem? | USP of the propos...","textChars":143,"textLines":5,"bbox":[19.24,85.94,922.24,149.01]}
+{"kind":"image","id":"im/wb2hwfyx","slide":5,"name":"Google Shape;122;p28","bbox":[0,0,960,61.87]}
+{"kind":"notes","id":"nt/val87ed8","slide":5,"text":""}
+{"kind":"slide","id":"sl/mlkjm1cf","slide":6,"title":"List of features offered by the solution","textShapes":1}
+{"kind":"textbox","id":"sh/qpg3ex0n","slide":6,"name":"Google Shape;127;p29","text":"List of features offered by the solution","textPreview":"List of features offered by the solution","textChars":40,"textLines":1,"bbox":[20.52,89.79,913.26,57.73]}
+{"kind":"image","id":"im/szqtcj6t","slide":6,"name":"Google Shape;128;p29","bbox":[0,0,960,61.87]}
+{"kind":"notes","id":"nt/mlkjm1cf","slide":6,"text":""}
+{"kind":"slide","id":"sl/58z25kb6","slide":7,"title":"Process flow diagram or Use-case diagram","textShapes":1}
+{"kind":"textbox","id":"sh/7adsji5s","slide":7,"name":"Google Shape;133;p30","text":"Process flow diagram or Use-case diagram","textPreview":"Process flow diagram or Use-case diagram","textChars":40,"textLines":1,"bbox":[20.52,87.22,920.94,53.86]}
+{"kind":"image","id":"im/5o7qpg3e","slide":7,"name":"Google Shape;134;p30","bbox":[0,0,960,61.87]}
+{"kind":"notes","id":"nt/58z25kb6","slide":7,"text":""}
+{"kind":"slide","id":"sl/0z61032l","slide":8,"title":"Wireframes/Mock diagrams of the proposed solution (optional)","textShapes":1}
+{"kind":"textbox","id":"sh/adsji5sn","slide":8,"name":"Google Shape;139;p31","text":"Wireframes/Mock diagrams of the proposed solution (optional)","textPreview":"Wireframes/Mock diagrams of the proposed solution (optional)","textChars":60,"textLines":1,"bbox":[21.81,92.35,915.81,62.87]}
+{"kind":"image","id":"im/3ex0nuxc","slide":8,"name":"Google Shape;140;p31","bbox":[0,0,960,61.87]}
+{"kind":"notes","id":"nt/0z61032l","slide":8,"text":""}
+{"kind":"slide","id":"sl/fu18jqh0","slide":9,"title":"Architecture diagram of the proposed solution","textShapes":1}
+{"kind":"textbox","id":"sh/87ed8bat","slide":9,"name":"Google Shape;145;p32","text":"Architecture diagram of the proposed solution","textPreview":"Architecture diagram of the proposed solution","textChars":45,"textLines":1,"bbox":[17.96,91.07,926.08,62.87]}
+{"kind":"image","id":"im/61032lsz","slide":9,"name":"Google Shape;146;p32","bbox":[0,0,960,61.87]}
+{"kind":"notes","id":"nt/fu18jqh0","slide":9,"text":""}
+{"kind":"slide","id":"sl/qh0fepkz","slide":10,"title":"Technologies to be used in the solution","textShapes":1}
+{"kind":"textbox","id":"sh/5sneloj2","slide":10,"name":"Google Shape;151;p33","text":"Technologies to be used in the solution","textPreview":"Technologies to be used in the solution","textChars":39,"textLines":1,"bbox":[16.67,89.79,922.24,118.46]}
+{"kind":"image","id":"im/3itgfmlk","slide":10,"name":"Google Shape;152;p33","bbox":[0,0,960,61.87]}
+{"kind":"notes","id":"nt/qh0fepkz","slide":10,"text":""}
+{"kind":"slide","id":"sl/29gr2p8n","slide":11,"title":"Estimated implementation cost (optional)","textShapes":1}
+{"kind":"textbox","id":"sh/yxobm58z","slide":11,"name":"Google Shape;157;p34","text":"Estimated implementation cost (optional)","textPreview":"Estimated implementation cost (optional)","textChars":40,"textLines":1,"bbox":[16.67,85.94,928.63,66.71]}
+{"kind":"image","id":"im/knih4byh","slide":11,"name":"Google Shape;158;p34","bbox":[0,0,960,61.87]}
+{"kind":"notes","id":"nt/29gr2p8n","slide":11,"text":""}
+{"kind":"slide","id":"sl/re1w7mp0","slide":12,"title":"Snapshots of the MVP","textShapes":1}
+{"kind":"textbox","id":"sh/orytsvu9","slide":12,"name":"Google Shape;163;p35","text":"Snapshots of the MVP","textPreview":"Snapshots of the MVP","textChars":20,"textLines":1,"bbox":[23.09,89.79,915.81,62.87]}
+{"kind":"image","id":"im/2x4nap4r","slide":12,"name":"Google Shape;164;p35","bbox":[0,0,960,61.87]}
+{"kind":"notes","id":"nt/re1w7mp0","slide":12,"text":""}
+{"kind":"slide","id":"sl/4fu18jqh","slide":13,"title":"Additional Details/Future Development (if any)","textShapes":1}
+{"kind":"textbox","id":"sh/s72x4nap","slide":13,"name":"Google Shape;169;p36","text":"Additional Details/Future Development (if any)","textPreview":"Additional Details/Future Development (if any)","textChars":46,"textLines":1,"bbox":[11.54,82.09,933.76,73.1]}
+{"kind":"image","id":"im/byhgn29g","slide":13,"name":"Google Shape;170;p36","bbox":[0,0,960,61.87]}
+{"kind":"notes","id":"nt/4fu18jqh","slide":13,"text":""}
+{"kind":"slide","id":"sl/lwval87e","slide":14,"title":"Provide links to your:","textShapes":1}
+{"kind":"textbox","id":"sh/qh0fepkz","slide":14,"name":"Google Shape;175;p37","text":"Provide links to your:\n\nGitHub Public Repository\nDemo Video Link (3 Minutes)\nMVP Link\nWorking Prototype Link","textPreview":"Provide links to your: |  | GitHub Public Repository | Demo Video Link (3 Minutes) | MVP Link | Working Prototype Link","textChars":108,"textLines":6,"bbox":[15.39,88.5,927.37,66.71]}
+{"kind":"image","id":"im/kjm1cfa9","slide":14,"name":"Google Shape;176;p37","bbox":[0,0,960,61.87]}
+{"kind":"notes","id":"nt/lwval87e","slide":14,"text":""}
+{"kind":"slide","id":"sl/25kb6xkf","slide":15,"title":"Slide 15","textShapes":0}
+{"kind":"image","id":"im/ytsvu9kn","slide":15,"name":"Google Shape;181;p38","bbox":[0,0,960,61.87]}
+{"kind":"notes","id":"nt/25kb6xkf","slide":15,"text":""}
+{"kind":"slide","id":"sl/7y1kre1w","slide":16,"title":"Slide 16","textShapes":0}
+{"kind":"image","id":"im/wval87ed","slide":16,"name":"Google Shape;186;p39","bbox":[0.42,0,960,540]}
+{"kind":"notes","id":"nt/7y1kre1w","slide":16,"text":""}
