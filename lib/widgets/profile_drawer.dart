@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -54,7 +55,7 @@ class ProfileDrawer extends StatelessWidget {
       color: bg,
       child: SafeArea(
         child: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.82,
+          width: math.min(MediaQuery.of(context).size.width * 0.86, 380),
           child: Column(children: [
             Container(
               padding: const EdgeInsets.fromLTRB(20, 24, 12, 20),

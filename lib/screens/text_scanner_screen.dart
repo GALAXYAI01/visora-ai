@@ -1,36 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../theme/app_theme.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/gemini_service.dart';
+import '../theme/app_theme.dart';
 
 final _scanResultProvider = StateProvider<Map<String, dynamic>?>((ref) => null);
 final _scanLoadingProvider = StateProvider<bool>((ref) => false);
 
 class TextScannerScreen extends ConsumerStatefulWidget {
   const TextScannerScreen({super.key});
+
   @override
   ConsumerState<TextScannerScreen> createState() => _TextScannerScreenState();
 }
 
 class _TextScannerScreenState extends ConsumerState<TextScannerScreen> {
-  final _ctrl = TextEditingController(
+  final _controller = TextEditingController(
     text: 'We are looking for a robust, dedicated individual to join our fast-paced team. '
-         'The ideal candidate should be a young, energetic self-starter who can handle the physical demands of the role.');
+        'The ideal candidate should be a young, energetic self-starter who can handle the physical demands of the role.',
+  );
 
   Future<void> _scan() async {
-    if (_ctrl.text.trim().isEmpty) return;
+    if (_controller.text.trim().isEmpty) return;
     ref.read(_scanLoadingProvider.notifier).state = true;
     ref.read(_scanResultProvider.notifier).state = null;
-
-    final result = await GeminiService.scanTextForBias(_ctrl.text.trim());
+    final result = await GeminiService.scanTextForBias(_controller.text.trim());
     ref.read(_scanResultProvider.notifier).state = result;
     ref.read(_scanLoadingProvider.notifier).state = false;
   }
 
   @override
-  void dispose() { _ctrl.dispose(); super.dispose(); }
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,328 +41,433 @@ class _TextScannerScreenState extends ConsumerState<TextScannerScreen> {
     final loading = ref.watch(_scanLoadingProvider);
 
     return Scaffold(
-      body: SafeArea(
-        child: Stack(fit: StackFit.expand, children: [
-          SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              // ── Header ──
-              Row(children: [
-                Icon(Icons.radar_rounded, color: VisoraColors.primary, size: 24),
-                const SizedBox(width: 8),
-                Text('AI Bias Scanner', style: GoogleFonts.inter(
-                  fontSize: 18, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface)),
-                const Spacer(),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: VisoraColors.primaryContainer,
-                    borderRadius: BorderRadius.circular(12)),
-                  child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    Icon(Icons.auto_awesome, color: VisoraColors.primary, size: 14),
-                    const SizedBox(width: 4),
-                    Text('Gemini AI', style: GoogleFonts.inter(
-                      fontSize: 11, fontWeight: FontWeight.w600, color: VisoraColors.primary)),
-                  ]),
-                ),
-                const SizedBox(width: 50), // space for profile avatar
-              ]).animate().fadeIn(duration: 200.ms),
-
-              Divider(height: 32, color: VisoraColors.surface),
-
-              // ── Title ──
-              Text('Text Bias Scanner', style: GoogleFonts.inter(
-                fontSize: 28, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface, letterSpacing: -0.4))
-                .animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
-              const SizedBox(height: 8),
-              Text('Analyze any text — job listings, policies, model outputs — for hidden bias using Gemini AI.',
-                style: GoogleFonts.inter(fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6))
-                .animate().fadeIn(delay: 150.ms),
-
-              const SizedBox(height: 24),
-
-              // ── Source Text ──
-              VisoraCard(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('Source Text', style: GoogleFonts.inter(
-                  fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
-                const SizedBox(height: 12),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: VisoraColors.outline),
-                    borderRadius: BorderRadius.circular(8)),
-                  child: TextField(
-                    controller: _ctrl,
-                    maxLines: 6,
-                    style: GoogleFonts.inter(fontSize: 14, color: Theme.of(context).colorScheme.onSurface, height: 1.6),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.all(16),
-                      hintText: 'Paste your text here — job descriptions, loan policies, HR rules, model decisions...',
-                      hintStyle: GoogleFonts.inter(fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                      filled: false)),
-                ),
-              ])).animate().fadeIn(delay: 200.ms, duration: 500.ms).slideY(begin: 0.06),
-
-              const SizedBox(height: 16),
-
-              // ── Quick Examples ──
-              Text('QUICK EXAMPLES', style: GoogleFonts.inter(
-                fontSize: 11, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 1)),
-              const SizedBox(height: 8),
-              SingleChildScrollView(scrollDirection: Axis.horizontal,
-                child: Row(children: [
-                  _ExampleChip(label: '📋 Job Listing', onTap: () {
-                    _ctrl.text = 'We need a young, energetic team player who can work long hours in a physically demanding role. Cultural fit is essential.';
-                  }),
-                  const SizedBox(width: 8),
-                  _ExampleChip(label: '🏦 Loan Policy', onTap: () {
-                    _ctrl.text = 'Applicants from certain zip codes may face additional verification. Single mothers and recent immigrants require co-signers regardless of credit score.';
-                  }),
-                  const SizedBox(width: 8),
-                  _ExampleChip(label: '👔 HR Policy', onTap: () {
-                    _ctrl.text = 'Employees returning from maternity leave will be reassigned to junior roles. Part-time workers are not eligible for leadership positions.';
-                  }),
-                  const SizedBox(width: 8),
-                  _ExampleChip(label: '🤖 AI Output', onTap: () {
-                    _ctrl.text = 'Based on historical data, the model recommends denying the application. Risk factors: neighborhood, marital status, native language.';
-                  }),
-                ])).animate().fadeIn(delay: 250.ms),
-
-              const SizedBox(height: 24),
-
-              // ── Scan Button ──
-              loading
-                ? Center(child: Column(children: [
-                    const SizedBox(height: 8),
-                    const CircularProgressIndicator(color: VisoraColors.primary),
-                    const SizedBox(height: 12),
-                    Text('Analyzing with Gemini AI...', style: GoogleFonts.inter(
-                      fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant)),
-                  ]))
-                : SizedBox(width: double.infinity, height: 52,
-                    child: ElevatedButton.icon(
-                      onPressed: _scan,
-                      icon: const Icon(Icons.auto_awesome_rounded, color: Colors.white, size: 20),
-                      label: Text('Scan for Bias with AI', style: GoogleFonts.inter(
-                        fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white)),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: VisoraColors.primary,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                        elevation: 0))),
-
-              // ── Results ──
-              if (result != null) ...[
-                const SizedBox(height: 24),
-                if (result.containsKey('error'))
-                  Container(padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(color: VisoraColors.errorContainer, borderRadius: BorderRadius.circular(12)),
-                    child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Icon(Icons.error_outline, color: VisoraColors.error, size: 20),
-                      const SizedBox(width: 10),
-                      Expanded(child: Text(result['error'].toString(),
-                        style: GoogleFonts.inter(fontSize: 13, color: VisoraColors.error, height: 1.5))),
-                    ]))
-                else ...[
-                  // ── Overall Risk Badge ──
-                  _buildRiskBadge(result).animate().fadeIn(duration: 400.ms).slideY(begin: 0.08),
-
-                  const SizedBox(height: 16),
-
-                  // ── Bias Score ──
-                  _buildScoreCard(result).animate().fadeIn(delay: 100.ms, duration: 400.ms),
-
-                  // ── Flagged Phrases ──
-                  if (result['flags'] != null && (result['flags'] as List).isNotEmpty) ...[
-                    const SizedBox(height: 16),
-                    _buildFlagsCard(result).animate().fadeIn(delay: 200.ms, duration: 400.ms),
-                  ],
-
-                  // ── Legal Risks ──
-                  if (result['legal_risks'] != null && (result['legal_risks'] as List).isNotEmpty) ...[
-                    const SizedBox(height: 16),
-                    _buildLegalCard(result).animate().fadeIn(delay: 300.ms, duration: 400.ms),
-                  ],
-
-                  // ── Improved Text ──
-                  if (result['improved_text'] != null) ...[
-                    const SizedBox(height: 16),
-                    _buildImprovedTextCard(result).animate().fadeIn(delay: 400.ms, duration: 400.ms),
-                  ],
+      body: VisoraPage(
+        children: [
+          const VisoraHeader(
+            eyebrow: 'Gemini review',
+            title: 'Text bias scanner',
+            subtitle: 'Analyze job listings, policies, model outputs, and internal copy for hidden bias and regulatory risk.',
+            icon: Icons.document_scanner_rounded,
+            trailing: SeverityBadge(label: 'Gemini AI'),
+          ).animate().fadeIn(duration: 260.ms).slideY(begin: -0.04),
+          const SizedBox(height: 24),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final wide = constraints.maxWidth >= 920;
+              final editor = _SourceTextPanel(controller: _controller, loading: loading, onScan: _scan);
+              final examples = _ExamplesPanel(onSelect: (value) => _controller.text = value);
+              if (!wide) return Column(children: [editor, const SizedBox(height: 16), examples]);
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(flex: 6, child: editor),
+                  const SizedBox(width: 16),
+                  Expanded(flex: 4, child: examples),
                 ],
-              ],
-            ]),
-          ),
-        ]),
+              );
+            },
+          ).animate().fadeIn(delay: 110.ms, duration: 360.ms).slideY(begin: 0.04),
+          if (loading) ...[
+            const SizedBox(height: 18),
+            const _LoadingReview().animate().fadeIn(duration: 240.ms),
+          ],
+          if (result != null) ...[
+            const SizedBox(height: 22),
+            _ScanResult(result: result).animate().fadeIn(duration: 320.ms).slideY(begin: 0.04),
+          ],
+        ],
       ),
     );
-  }
-
-  Widget _buildRiskBadge(Map<String, dynamic> result) {
-    final risk = (result['overall_risk'] ?? 'UNKNOWN').toString().toUpperCase();
-    final color = risk == 'HIGH' ? VisoraColors.error
-        : risk == 'MODERATE' ? const Color(0xFFF9AB00)
-        : VisoraColors.success;
-    final icon = risk == 'HIGH' ? Icons.dangerous_rounded
-        : risk == 'MODERATE' ? Icons.warning_amber_rounded
-        : Icons.verified_rounded;
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.3))),
-      child: Row(children: [
-        Icon(icon, color: color, size: 28),
-        const SizedBox(width: 14),
-        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('$risk RISK', style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w700, color: color, letterSpacing: 0.5)),
-          const SizedBox(height: 4),
-          Text(result['summary']?.toString() ?? '',
-            style: GoogleFonts.inter(fontSize: 13, color: Theme.of(context).colorScheme.onSurface, height: 1.5)),
-        ])),
-      ]),
-    );
-  }
-
-  Widget _buildScoreCard(Map<String, dynamic> result) {
-    final score = (result['bias_score'] ?? 0);
-    final scoreNum = score is int ? score.toDouble() : (score as num).toDouble();
-    return VisoraCard(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text('BIAS SCORE', style: GoogleFonts.inter(
-        fontSize: 11, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 1)),
-      const SizedBox(height: 12),
-      Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-        Text('${scoreNum.toInt()}', style: GoogleFonts.inter(fontSize: 42, fontWeight: FontWeight.w700,
-          color: scoreNum > 60 ? VisoraColors.error : scoreNum > 30 ? const Color(0xFFF9AB00) : VisoraColors.success)),
-        Padding(padding: const EdgeInsets.only(bottom: 8),
-          child: Text('/100', style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onSurfaceVariant))),
-      ]),
-      const SizedBox(height: 12),
-      ClipRRect(borderRadius: BorderRadius.circular(4),
-        child: LinearProgressIndicator(
-          value: scoreNum / 100,
-          backgroundColor: VisoraColors.surface,
-          valueColor: AlwaysStoppedAnimation(
-            scoreNum > 60 ? VisoraColors.error : scoreNum > 30 ? const Color(0xFFF9AB00) : VisoraColors.success),
-          minHeight: 8)),
-    ]));
-  }
-
-  Widget _buildFlagsCard(Map<String, dynamic> result) {
-    final flags = result['flags'] as List;
-    return VisoraCard(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(children: [
-        Icon(Icons.flag_rounded, color: VisoraColors.error, size: 18),
-        const SizedBox(width: 8),
-        Text('Flagged Phrases (${flags.length})', style: GoogleFonts.inter(
-          fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
-      ]),
-      const SizedBox(height: 16),
-      ...flags.map((flag) {
-        final f = flag as Map<String, dynamic>;
-        final severity = f['severity']?.toString() ?? 'LOW';
-        final sevColor = severity == 'HIGH' ? VisoraColors.error
-            : severity == 'MODERATE' ? const Color(0xFFF9AB00)
-            : VisoraColors.success;
-        return Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: sevColor.withValues(alpha: 0.06),
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: sevColor.withValues(alpha: 0.2))),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(color: sevColor.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(6)),
-                child: Text(severity, style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: sevColor))),
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(color: VisoraColors.primaryContainer, borderRadius: BorderRadius.circular(6)),
-                child: Text(f['type']?.toString().toUpperCase() ?? '', style: GoogleFonts.inter(
-                  fontSize: 10, fontWeight: FontWeight.w600, color: VisoraColors.primary))),
-            ]),
-            const SizedBox(height: 10),
-            Text('"${f['phrase'] ?? ''}"', style: GoogleFonts.inter(
-              fontSize: 14, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface, fontStyle: FontStyle.italic)),
-            const SizedBox(height: 6),
-            Text(f['explanation']?.toString() ?? '', style: GoogleFonts.inter(
-              fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5)),
-            if (f['suggestion'] != null) ...[
-              const SizedBox(height: 8),
-              Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Icon(Icons.lightbulb_outline, color: VisoraColors.success, size: 16),
-                const SizedBox(width: 6),
-                Expanded(child: Text('Suggestion: ${f['suggestion']}', style: GoogleFonts.inter(
-                  fontSize: 12, color: VisoraColors.success, fontWeight: FontWeight.w500, height: 1.4))),
-              ]),
-            ],
-          ]),
-        );
-      }),
-    ]));
-  }
-
-  Widget _buildLegalCard(Map<String, dynamic> result) {
-    final risks = (result['legal_risks'] as List).map((e) => e.toString()).toList();
-    return VisoraCard(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(children: [
-        Icon(Icons.gavel_rounded, color: const Color(0xFFF9AB00), size: 18),
-        const SizedBox(width: 8),
-        Text('Legal & Regulatory Risks', style: GoogleFonts.inter(
-          fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
-      ]),
-      const SizedBox(height: 12),
-      ...risks.map((r) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Icon(Icons.warning_amber_rounded, color: const Color(0xFFF9AB00), size: 16),
-          const SizedBox(width: 8),
-          Expanded(child: Text(r, style: GoogleFonts.inter(fontSize: 13, color: Theme.of(context).colorScheme.onSurface, height: 1.4))),
-        ]),
-      )),
-    ]));
-  }
-
-  Widget _buildImprovedTextCard(Map<String, dynamic> result) {
-    return VisoraCard(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(children: [
-        Icon(Icons.auto_fix_high_rounded, color: VisoraColors.success, size: 18),
-        const SizedBox(width: 8),
-        Text('AI-Suggested Improvement', style: GoogleFonts.inter(
-          fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
-      ]),
-      const SizedBox(height: 12),
-      Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: VisoraColors.tertiaryContainer,
-          borderRadius: BorderRadius.circular(8)),
-        child: Text(result['improved_text'].toString(),
-          style: GoogleFonts.inter(fontSize: 13, color: const Color(0xFF0D652D), height: 1.6)),
-      ),
-    ]));
   }
 }
 
-class _ExampleChip extends StatelessWidget {
-  final String label; final VoidCallback onTap;
-  const _ExampleChip({required this.label, required this.onTap});
+class _SourceTextPanel extends StatelessWidget {
+  final TextEditingController controller;
+  final bool loading;
+  final VoidCallback onScan;
+
+  const _SourceTextPanel({
+    required this.controller,
+    required this.loading,
+    required this.onScan,
+  });
+
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(cursor: SystemMouseCursors.click,
-      child: GestureDetector(onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(9999),
-            border: Border.all(color: VisoraColors.outline)),
-          child: Text(label, style: GoogleFonts.inter(
-            fontSize: 12, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onSurfaceVariant)))));
+    return VisoraCard(
+      prominent: true,
+      padding: const EdgeInsets.all(22),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Source text', style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 6),
+          Text('Paste the exact text you want reviewed.', style: Theme.of(context).textTheme.bodyMedium),
+          const SizedBox(height: 16),
+          TextField(
+            controller: controller,
+            minLines: 9,
+            maxLines: 14,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+            decoration: const InputDecoration(
+              alignLabelWithHint: true,
+              hintText: 'Paste job descriptions, loan policies, HR rules, or model outputs...',
+            ),
+          ),
+          const SizedBox(height: 18),
+          loading
+              ? const Center(child: CircularProgressIndicator(color: VisoraColors.primary))
+              : GradientButton(
+                  label: 'Scan for Bias',
+                  icon: Icons.auto_awesome_rounded,
+                  onPressed: onScan,
+                ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ExamplesPanel extends StatelessWidget {
+  final ValueChanged<String> onSelect;
+  const _ExamplesPanel({required this.onSelect});
+
+  @override
+  Widget build(BuildContext context) {
+    final examples = [
+      (
+        title: 'Job listing',
+        body: 'We need a young, energetic team player who can work long hours in a physically demanding role. Cultural fit is essential.'
+      ),
+      (
+        title: 'Loan policy',
+        body: 'Applicants from certain zip codes may face additional verification. Single mothers and recent immigrants require co-signers regardless of credit score.'
+      ),
+      (
+        title: 'HR policy',
+        body: 'Employees returning from maternity leave will be reassigned to junior roles. Part-time workers are not eligible for leadership positions.'
+      ),
+      (
+        title: 'AI output',
+        body: 'Based on historical data, the model recommends denying the application. Risk factors: neighborhood, marital status, native language.'
+      ),
+    ];
+
+    return VisoraCard(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Quick examples', style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 6),
+          Text('Use these samples to preview the scanner.', style: Theme.of(context).textTheme.bodyMedium),
+          const SizedBox(height: 16),
+          ...examples.map((example) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: VisoraCard(
+                onTap: () => onSelect(example.body),
+                padding: const EdgeInsets.all(14),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 34,
+                      height: 34,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.75),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(Icons.article_outlined, color: Theme.of(context).colorScheme.primary, size: 18),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(example.title, style: Theme.of(context).textTheme.titleSmall),
+                          const SizedBox(height: 3),
+                          Text(example.body, maxLines: 2, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodySmall),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
+          const InfoBanner(
+            icon: Icons.privacy_tip_outlined,
+            title: 'Review scope',
+            body: 'Gemini flags wording risk and suggests safer alternatives. Final compliance review remains a human decision.',
+            color: VisoraColors.primary,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LoadingReview extends StatelessWidget {
+  const _LoadingReview();
+
+  @override
+  Widget build(BuildContext context) {
+    return VisoraCard(
+      padding: const EdgeInsets.all(18),
+      child: Row(
+        children: [
+          const SizedBox(width: 26, height: 26, child: CircularProgressIndicator(color: VisoraColors.primary, strokeWidth: 3)),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Analyzing with Gemini AI', style: Theme.of(context).textTheme.titleSmall),
+                Text('Checking language, severity, legal signals, and safer rewrites.', style: Theme.of(context).textTheme.bodySmall),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ScanResult extends StatelessWidget {
+  final Map<String, dynamic> result;
+  const _ScanResult({required this.result});
+
+  @override
+  Widget build(BuildContext context) {
+    if (result.containsKey('error')) {
+      return InfoBanner(
+        icon: Icons.error_outline_rounded,
+        title: 'Scanner error',
+        body: result['error'].toString(),
+        color: VisoraColors.error,
+      );
+    }
+
+    final risk = (result['overall_risk'] ?? 'UNKNOWN').toString().toUpperCase();
+    final scoreRaw = result['bias_score'] ?? 0;
+    final score = scoreRaw is num ? scoreRaw.toDouble() : 0.0;
+    final riskColor = risk == 'HIGH'
+        ? VisoraColors.error
+        : risk == 'MODERATE'
+            ? VisoraColors.warning
+            : VisoraColors.success;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InfoBanner(
+          icon: risk == 'HIGH'
+              ? Icons.dangerous_rounded
+              : risk == 'MODERATE'
+                  ? Icons.warning_amber_rounded
+                  : Icons.verified_rounded,
+          title: '$risk risk',
+          body: result['summary']?.toString() ?? 'No summary returned.',
+          color: riskColor,
+        ),
+        const SizedBox(height: 16),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final wide = constraints.maxWidth >= 900;
+            final scoreCard = _ScoreCard(score: score, color: riskColor);
+            final legal = _LegalCard(result: result);
+            if (!wide) return Column(children: [scoreCard, const SizedBox(height: 16), legal]);
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(flex: 3, child: scoreCard),
+                const SizedBox(width: 16),
+                Expanded(flex: 5, child: legal),
+              ],
+            );
+          },
+        ),
+        if (result['flags'] != null && (result['flags'] as List).isNotEmpty) ...[
+          const SizedBox(height: 16),
+          _FlagsCard(flags: result['flags'] as List),
+        ],
+        if (result['improved_text'] != null) ...[
+          const SizedBox(height: 16),
+          _ImprovedTextCard(text: result['improved_text'].toString()),
+        ],
+      ],
+    );
+  }
+}
+
+class _ScoreCard extends StatelessWidget {
+  final double score;
+  final Color color;
+
+  const _ScoreCard({required this.score, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return VisoraCard(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Bias score', style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 14),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(score.toInt().toString(), style: Theme.of(context).textTheme.displaySmall?.copyWith(color: color)),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text('/100', style: Theme.of(context).textTheme.titleMedium),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: (score / 100).clamp(0.0, 1.0),
+              minHeight: 9,
+              backgroundColor: Theme.of(context).dividerColor,
+              valueColor: AlwaysStoppedAnimation(color),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LegalCard extends StatelessWidget {
+  final Map<String, dynamic> result;
+  const _LegalCard({required this.result});
+
+  @override
+  Widget build(BuildContext context) {
+    final risks = result['legal_risks'] is List ? (result['legal_risks'] as List).map((item) => item.toString()).toList() : <String>[];
+    return VisoraCard(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Legal and regulatory signals', style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 12),
+          if (risks.isEmpty)
+            Text('No legal risk notes returned.', style: Theme.of(context).textTheme.bodyMedium)
+          else
+            ...risks.map(
+              (risk) => Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.warning_amber_rounded, color: VisoraColors.warning, size: 18),
+                    const SizedBox(width: 9),
+                    Expanded(child: Text(risk, style: Theme.of(context).textTheme.bodyMedium)),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FlagsCard extends StatelessWidget {
+  final List flags;
+  const _FlagsCard({required this.flags});
+
+  @override
+  Widget build(BuildContext context) {
+    return VisoraCard(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Flagged phrases (${flags.length})', style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 16),
+          ...flags.map((flag) {
+            final item = flag as Map<String, dynamic>;
+            final severity = item['severity']?.toString().toUpperCase() ?? 'LOW';
+            final color = severity == 'HIGH'
+                ? VisoraColors.error
+                : severity == 'MODERATE'
+                    ? VisoraColors.warning
+                    : VisoraColors.success;
+            return Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.07),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: color.withValues(alpha: 0.18)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      SeverityBadge(label: severity),
+                      SeverityBadge(label: item['type']?.toString().toUpperCase() ?? 'BIAS'),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text('"${item['phrase'] ?? ''}"', style: Theme.of(context).textTheme.titleSmall),
+                  const SizedBox(height: 6),
+                  Text(item['explanation']?.toString() ?? '', style: Theme.of(context).textTheme.bodyMedium),
+                  if (item['suggestion'] != null) ...[
+                    const SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Icon(Icons.lightbulb_outline_rounded, color: VisoraColors.success, size: 18),
+                        const SizedBox(width: 8),
+                        Expanded(child: Text('Suggestion: ${item['suggestion']}', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: VisoraColors.success))),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+}
+
+class _ImprovedTextCard extends StatelessWidget {
+  final String text;
+  const _ImprovedTextCard({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return VisoraCard(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('AI-suggested improvement', style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 12),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: VisoraColors.tertiaryContainer,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: VisoraColors.success.withValues(alpha: 0.16)),
+            ),
+            child: Text(text, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: const Color(0xFF0D652D))),
+          ),
+        ],
+      ),
+    );
   }
 }

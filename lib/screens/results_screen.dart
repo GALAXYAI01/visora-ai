@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../theme/app_theme.dart';
-import '../services/providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../services/api_service.dart';
+import '../services/providers.dart';
+import '../theme/app_theme.dart';
 
 class ResultsScreen extends ConsumerWidget {
   const ResultsScreen({super.key});
@@ -14,193 +13,287 @@ class ResultsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final result = ref.watch(auditResultProvider);
     if (result == null) {
-      // Seed demo data for sample audit display
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.read(auditResultProvider.notifier).state = _demoResult;
       });
-      return Scaffold(
-        body: const Center(child: CircularProgressIndicator(color: VisoraColors.primary)));
+      return const Scaffold(body: Center(child: CircularProgressIndicator(color: VisoraColors.primary)));
     }
+
+    final highRisk = result.biasSeverity.toUpperCase() == 'HIGH';
+
     return Scaffold(
-      body: SafeArea(
-        child: Stack(fit: StackFit.expand, children: [
-          SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              // ── Header ──
-              Row(children: [
-                Icon(Icons.bar_chart_rounded, color: VisoraColors.primary, size: 24),
-                const SizedBox(width: 8),
-                Text('Visora', style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w700, color: VisoraColors.primary)),
-                const Spacer(),
-                Container(width: 36, height: 36,
-                  decoration: BoxDecoration(color: VisoraColors.surfaceHigh, shape: BoxShape.circle),
-                  child: Icon(Icons.person_rounded, color: Theme.of(context).colorScheme.onSurfaceVariant, size: 20)),
-              ]).animate().fadeIn(duration: 200.ms),
-
-              const SizedBox(height: 16),
-              MouseRegion(cursor: SystemMouseCursors.click,
-                child: GestureDetector(onTap: () => context.canPop() ? context.pop() : context.go('/home'),
-                  child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    Icon(Icons.arrow_back_rounded, color: VisoraColors.primary, size: 16),
-                    const SizedBox(width: 4),
-                    Text('BACK TO SCANNER', style: GoogleFonts.inter(
-                      fontSize: 12, fontWeight: FontWeight.w600, color: VisoraColors.primary, letterSpacing: 0.5)),
-                  ]))).animate().fadeIn(delay: 50.ms),
-
-              const SizedBox(height: 12),
-              Text('Bias Results Evaluation', style: GoogleFonts.inter(
-                fontSize: 28, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface, letterSpacing: -0.4))
-                .animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
-              const SizedBox(height: 8),
-              Text('Analysis complete across ${result.rowCount.toStringAsFixed(0)} recent records. ${result.biasSeverity == "HIGH" ? "Critical demographic disparities require immediate attention." : "Evaluation indicates acceptable fairness levels."}',
-                style: GoogleFonts.inter(fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6))
-                .animate().fadeIn(delay: 150.ms),
-
-              const SizedBox(height: 24),
-
-              // ── Alert Banner ──
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: result.biasSeverity == 'HIGH' ? VisoraColors.errorContainer : VisoraColors.tertiaryContainer,
-                  borderRadius: BorderRadius.circular(12)),
-                child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Icon(result.biasSeverity == 'HIGH' ? Icons.warning_rounded : Icons.check_circle_rounded,
-                    color: result.biasSeverity == 'HIGH' ? VisoraColors.error : VisoraColors.success, size: 24),
+      body: VisoraPage(
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 40),
+        children: [
+          VisoraHeader(
+            eyebrow: 'Audit results',
+            title: 'Bias results evaluation',
+            subtitle: 'Analysis complete across ${result.rowCount.toStringAsFixed(0)} records. ${highRisk ? "Critical demographic disparities require review before deployment." : "Evaluation indicates acceptable fairness levels."}',
+            icon: Icons.bar_chart_rounded,
+            onBack: () => context.canPop() ? context.pop() : context.go('/home'),
+            trailing: SeverityBadge(label: result.biasSeverity),
+          ).animate().fadeIn(duration: 260.ms).slideY(begin: -0.04),
+          const SizedBox(height: 24),
+          InfoBanner(
+            icon: highRisk ? Icons.warning_rounded : Icons.check_circle_rounded,
+            title: highRisk ? 'High bias detected' : 'Acceptable bias levels',
+            body: highRisk
+                ? 'Model predictions deviate from parity thresholds across ${result.protectedAttr}. Apply remediation before production use.'
+                : 'Model predictions are within the configured fairness thresholds.',
+            color: highRisk ? VisoraColors.error : VisoraColors.success,
+          ).animate().fadeIn(delay: 70.ms, duration: 340.ms).slideY(begin: 0.04),
+          const SizedBox(height: 18),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final columns = constraints.maxWidth >= 920 ? 3 : constraints.maxWidth >= 620 ? 2 : 1;
+              final itemWidth = (constraints.maxWidth - (columns - 1) * 14) / columns;
+              return Wrap(
+                spacing: 14,
+                runSpacing: 14,
+                children: [
+                  SizedBox(
+                    width: itemWidth,
+                    child: _MetricCard(
+                      label: 'Disparate impact',
+                      value: result.disparateImpact,
+                      threshold: 'Threshold greater than 0.80',
+                      icon: Icons.show_chart_rounded,
+                      isGood: result.disparateImpact >= 0.8,
+                    ),
+                  ),
+                  SizedBox(
+                    width: itemWidth,
+                    child: _MetricCard(
+                      label: 'Statistical parity',
+                      value: result.statisticalParity,
+                      threshold: 'Target close to 0.00',
+                      icon: Icons.balance_rounded,
+                      isGood: result.statisticalParity.abs() < 0.1,
+                    ),
+                  ),
+                  SizedBox(
+                    width: itemWidth,
+                    child: _MetricCard(
+                      label: 'Equal opportunity',
+                      value: result.equalizedOdds,
+                      threshold: 'Acceptable range',
+                      icon: Icons.verified_rounded,
+                      isGood: result.equalizedOdds >= 0.7,
+                    ),
+                  ),
+                ],
+              );
+            },
+          ).animate().fadeIn(delay: 130.ms, duration: 360.ms),
+          const SizedBox(height: 24),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final wide = constraints.maxWidth >= 900;
+              final rates = _ApprovalRates(result: result);
+              final advice = _AdvicePanel(result: result);
+              if (!wide) return Column(children: [rates, const SizedBox(height: 16), advice]);
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(flex: 6, child: rates),
+                  const SizedBox(width: 16),
+                  Expanded(flex: 4, child: advice),
+                ],
+              );
+            },
+          ).animate().fadeIn(delay: 190.ms, duration: 360.ms).slideY(begin: 0.03),
+          const SizedBox(height: 24),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final wide = constraints.maxWidth >= 720;
+              final impact = GradientButton(
+                label: 'See Human Impact',
+                icon: Icons.groups_rounded,
+                onPressed: () => context.push('/human-cost'),
+              );
+              final remediate = GradientButton(
+                label: 'Remediate Bias Now',
+                icon: Icons.auto_fix_high_rounded,
+                onPressed: () => context.go('/reports'),
+                secondary: true,
+              );
+              if (!wide) return Column(children: [impact, const SizedBox(height: 12), remediate]);
+              return Row(
+                children: [
+                  Expanded(child: impact),
                   const SizedBox(width: 12),
-                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(result.biasSeverity == 'HIGH' ? 'HIGH BIAS DETECTED' : 'ACCEPTABLE BIAS LEVELS',
-                      style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w700,
-                        color: result.biasSeverity == 'HIGH' ? VisoraColors.error : VisoraColors.success)),
-                    const SizedBox(height: 4),
-                    Text(result.biasSeverity == 'HIGH'
-                      ? 'Model predictions show severe deviation from acceptable parity thresholds across ${result.protectedAttr} attributes. Immediate remediation recommended before deployment.'
-                      : 'Model predictions are within acceptable fairness thresholds.',
-                      style: GoogleFonts.inter(fontSize: 13, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8), height: 1.5)),
-                  ])),
-                ]),
-              ).animate().fadeIn(delay: 200.ms, duration: 400.ms).slideY(begin: 0.06),
-
-              const SizedBox(height: 20),
-
-              // ── Metric Cards ──
-              _MetricCard(label: 'DISPARATE IMPACT', value: result.disparateImpact, threshold: 'Threshold: >0.80',
-                icon: Icons.show_chart_rounded, isGood: result.disparateImpact >= 0.8)
-                .animate().fadeIn(delay: 300.ms, duration: 400.ms).slideY(begin: 0.06),
-              const SizedBox(height: 12),
-              _MetricCard(label: 'STATISTICAL PARITY', value: result.statisticalParity, threshold: 'Target: 0.00',
-                icon: Icons.balance_rounded, isGood: result.statisticalParity.abs() < 0.1)
-                .animate().fadeIn(delay: 350.ms, duration: 400.ms).slideY(begin: 0.06),
-              const SizedBox(height: 12),
-              _MetricCard(label: 'EQUAL OPPORTUNITY', value: result.equalizedOdds, threshold: 'Acceptable Range',
-                icon: Icons.verified_rounded, isGood: result.equalizedOdds >= 0.7)
-                .animate().fadeIn(delay: 400.ms, duration: 400.ms).slideY(begin: 0.06),
-
-              const SizedBox(height: 20),
-
-              // ── Approval Rates ──
-              VisoraCard(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('Approval Rate by ${result.protectedAttr[0].toUpperCase()}${result.protectedAttr.substring(1)}',
-                  style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface)),
-                const SizedBox(height: 20),
-                ...result.approvalRates.entries.map((e) => Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                      Text('${e.key[0].toUpperCase()}${e.key.substring(1)} Applicants', style: GoogleFonts.inter(
-                        fontSize: 14, color: Theme.of(context).colorScheme.onSurface)),
-                      Text('${(e.value * 100).round()}%', style: GoogleFonts.inter(
-                        fontSize: 14, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface)),
-                    ]),
-                    const SizedBox(height: 8),
-                    ClipRRect(borderRadius: BorderRadius.circular(4),
-                      child: LinearProgressIndicator(value: e.value,
-                        backgroundColor: VisoraColors.surface,
-                        valueColor: AlwaysStoppedAnimation(e.value > 0.5 ? VisoraColors.primary : VisoraColors.error),
-                        minHeight: 8)),
-                  ]))),
-              ])).animate().fadeIn(delay: 450.ms, duration: 400.ms),
-
-              const SizedBox(height: 20),
-
-              // ── Actionable Advice ──
-              VisoraCard(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Row(children: [
-                  Container(width: 32, height: 32,
-                    decoration: BoxDecoration(color: VisoraColors.primaryContainer.withValues(alpha: 0.5), shape: BoxShape.circle),
-                    child: const Icon(Icons.auto_awesome_rounded, color: VisoraColors.primary, size: 16)),
-                  const SizedBox(width: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    decoration: BoxDecoration(color: VisoraColors.surfaceHigh, borderRadius: BorderRadius.circular(9999)),
-                    child: Text('ACTIONABLE ADVICE', style: GoogleFonts.inter(
-                      fontSize: 11, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 1))),
-                ]),
-                const SizedBox(height: 16),
-                Text(result.geminiExplanation.isNotEmpty ? result.geminiExplanation
-                  : "The current model penalizes the 'Tenure at Current Address' feature disproportionately for female applicants. We recommend applying adversarial debiasing techniques or adjusting class weights to mitigate this specific vector without compromising overall model accuracy.",
-                  style: GoogleFonts.inter(fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6)),
-              ])).animate().fadeIn(delay: 500.ms, duration: 400.ms),
-
-              const SizedBox(height: 24),
-
-              // ── CTAs ──
-              MouseRegion(cursor: SystemMouseCursors.click,
-                child: GestureDetector(onTap: () => context.push('/human-cost'),
-                  child: Container(width: double.infinity, height: 52,
-                    decoration: BoxDecoration(color: VisoraColors.error, borderRadius: BorderRadius.circular(9999)),
-                    child: Center(child: Text('SEE HUMAN IMPACT', style: GoogleFonts.inter(
-                      fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white, letterSpacing: 0.5)))))),
-              const SizedBox(height: 12),
-              MouseRegion(cursor: SystemMouseCursors.click,
-                child: GestureDetector(onTap: () {},
-                  child: Container(width: double.infinity, height: 52,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(9999),
-                      border: Border.all(color: VisoraColors.error, width: 2)),
-                    child: Center(child: Text('REMEDIATE BIAS NOW', style: GoogleFonts.inter(
-                      fontSize: 14, fontWeight: FontWeight.w600, color: VisoraColors.error, letterSpacing: 0.5)))))),
-            ]),
-          ),
-        ]),
+                  Expanded(child: remediate),
+                ],
+              );
+            },
+          ).animate().fadeIn(delay: 260.ms, duration: 320.ms),
+        ],
       ),
     );
   }
 }
 
 class _MetricCard extends StatelessWidget {
-  final String label, threshold;
+  final String label;
+  final String threshold;
   final double value;
   final IconData icon;
   final bool isGood;
-  const _MetricCard({required this.label, required this.value, required this.threshold, required this.icon, required this.isGood});
+
+  const _MetricCard({
+    required this.label,
+    required this.value,
+    required this.threshold,
+    required this.icon,
+    required this.isGood,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return VisoraCard(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text(label, style: GoogleFonts.inter(
-          fontSize: 11, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 1)),
-        Icon(icon, color: isGood ? VisoraColors.success : VisoraColors.error, size: 20),
-      ]),
-      const SizedBox(height: 12),
-      Text(value.toStringAsFixed(2), style: GoogleFonts.inter(
-        fontSize: 36, fontWeight: FontWeight.w700, color: isGood ? VisoraColors.success : VisoraColors.error)),
-      const SizedBox(height: 12),
-      ClipRRect(borderRadius: BorderRadius.circular(4),
-        child: LinearProgressIndicator(
-          value: value.abs().clamp(0.0, 1.0),
-          backgroundColor: VisoraColors.surface,
-          valueColor: AlwaysStoppedAnimation(isGood ? VisoraColors.success : VisoraColors.error), minHeight: 6)),
-      const SizedBox(height: 8),
-      Align(alignment: Alignment.centerRight,
-        child: Text(threshold, style: GoogleFonts.inter(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant))),
-    ]));
+    final color = isGood ? VisoraColors.success : VisoraColors.error;
+    return VisoraCard(
+      padding: const EdgeInsets.all(18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(8)),
+                child: Icon(icon, color: color, size: 19),
+              ),
+              const Spacer(),
+              SeverityBadge(label: isGood ? 'Passed' : 'Violation'),
+            ],
+          ),
+          const SizedBox(height: 18),
+          Text(label.toUpperCase(), style: Theme.of(context).textTheme.labelSmall),
+          const SizedBox(height: 6),
+          Text(value.toStringAsFixed(2), style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: color)),
+          const SizedBox(height: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: value.abs().clamp(0.0, 1.0),
+              minHeight: 8,
+              backgroundColor: Theme.of(context).dividerColor,
+              valueColor: AlwaysStoppedAnimation(color),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(threshold, style: Theme.of(context).textTheme.bodySmall),
+        ],
+      ),
+    );
   }
 }
 
-// Demo result for sample audits
+class _ApprovalRates extends StatelessWidget {
+  final AuditResult result;
+  const _ApprovalRates({required this.result});
+
+  @override
+  Widget build(BuildContext context) {
+    return VisoraCard(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Approval rate by ${_titleCase(result.protectedAttr)}', style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 6),
+          Text('Outcome distribution across protected groups.', style: Theme.of(context).textTheme.bodyMedium),
+          const SizedBox(height: 20),
+          ...result.approvalRates.entries.map((entry) {
+            final value = entry.value.clamp(0.0, 1.0);
+            final color = value >= 0.5 ? VisoraColors.primary : VisoraColors.error;
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(child: Text('${_titleCase(entry.key)} applicants', style: Theme.of(context).textTheme.titleSmall)),
+                      Text('${(value * 100).round()}%', style: Theme.of(context).textTheme.titleSmall?.copyWith(color: color)),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                      value: value,
+                      minHeight: 10,
+                      backgroundColor: Theme.of(context).dividerColor,
+                      valueColor: AlwaysStoppedAnimation(color),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+}
+
+class _AdvicePanel extends StatelessWidget {
+  final AuditResult result;
+  const _AdvicePanel({required this.result});
+
+  @override
+  Widget build(BuildContext context) {
+    final explanation = result.geminiExplanation.isNotEmpty
+        ? result.geminiExplanation
+        : "The current model penalizes the 'Tenure at Current Address' feature disproportionately for female applicants. We recommend applying adversarial debiasing techniques or adjusting class weights to mitigate this vector without compromising overall model accuracy.";
+    return Column(
+      children: [
+        VisoraCard(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: VisoraColors.primaryContainer.withValues(alpha: 0.75),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(Icons.auto_awesome_rounded, color: VisoraColors.primary, size: 18),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(child: Text('Actionable advice', style: Theme.of(context).textTheme.titleLarge)),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Text(explanation, style: Theme.of(context).textTheme.bodyMedium),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        InfoBanner(
+          icon: Icons.gavel_rounded,
+          title: result.legalThresholdViolated ? 'Legal threshold violated' : 'Thresholds acceptable',
+          body: result.legalThresholdViolated
+              ? 'The audit failed at least one configured fairness threshold and should be documented.'
+              : 'No configured legal threshold was violated by this result.',
+          color: result.legalThresholdViolated ? VisoraColors.warning : VisoraColors.success,
+        ),
+      ],
+    );
+  }
+}
+
+String _titleCase(String value) {
+  if (value.isEmpty) return value;
+  return value[0].toUpperCase() + value.substring(1);
+}
+
 final _demoResult = AuditResult(
   auditId: 'demo-001',
   rowCount: 10000,
