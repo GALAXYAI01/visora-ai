@@ -277,13 +277,6 @@ class _SettingsSheet extends ConsumerWidget {
           ]),
           const SizedBox(height: 20),
           SwitchListTile(
-            secondary: const Icon(Icons.dark_mode_outlined),
-            title: Text('Dark Mode', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500, color: cs.onSurface)),
-            subtitle: Text('Switch to dark theme', style: GoogleFonts.inter(fontSize: 12, color: cs.onSurface.withValues(alpha: 0.6))),
-            value: s.isDark, onChanged: (v) => n.toggleDarkMode(v),
-            activeColor: cs.primary,
-          ),
-          SwitchListTile(
             secondary: const Icon(Icons.notifications_outlined),
             title: Text('Push Notifications', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500, color: cs.onSurface)),
             subtitle: Text('Receive bias alerts', style: GoogleFonts.inter(fontSize: 12, color: cs.onSurface.withValues(alpha: 0.6))),
