@@ -19,36 +19,19 @@ class HomeScreen extends ConsumerWidget {
   }
 
   void _showNotifications(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (_) => const _NotificationsSheet(),
-    );
-  }
-
-  void _showProfile(BuildContext context, WidgetRef ref) {
-    final auth = ref.read(authProvider);
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
-      barrierLabel: 'Profile',
-      barrierColor: Colors.black54,
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (ctx, anim, anim2) => Align(
-        alignment: Alignment.centerRight,
-        child: _ProfileDrawer(
-          userName: auth.userName ?? 'User',
-          onLogout: () {
-            Navigator.pop(ctx);
-            ref.read(authProvider.notifier).logout();
-            context.go('/login');
-          },
-        ),
+      barrierLabel: 'Notifications',
+      barrierColor: Colors.black38,
+      transitionDuration: const Duration(milliseconds: 250),
+      pageBuilder: (ctx, anim, anim2) => const Align(
+        alignment: Alignment.topCenter,
+        child: _NotificationsDropdown(),
       ),
       transitionBuilder: (ctx, anim, anim2, child) {
         return SlideTransition(
-          position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
+          position: Tween<Offset>(begin: const Offset(0, -1), end: Offset.zero)
             .animate(CurvedAnimation(parent: anim, curve: Curves.easeOutCubic)),
           child: child,
         );
@@ -75,7 +58,7 @@ class HomeScreen extends ConsumerWidget {
                 Icon(Icons.security_update_good_rounded, color: VisoraColors.primary, size: 28),
                 const SizedBox(width: 8),
                 Text('Visora', style: GoogleFonts.inter(
-                  fontSize: 20, fontWeight: FontWeight.w700, color: VisoraColors.onSurface)),
+                  fontSize: 20, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface)),
                 const Spacer(),
                 // Bell icon → notifications
                 Material(
@@ -86,12 +69,12 @@ class HomeScreen extends ConsumerWidget {
                     child: Container(
                       width: 40, height: 40,
                       decoration: BoxDecoration(
-                        color: VisoraColors.surfaceLowest,
+                        color: Theme.of(context).colorScheme.surface,
                         shape: BoxShape.circle,
-                        border: Border.all(color: VisoraColors.outlineVariant),
+                        border: Border.all(color: Theme.of(context).dividerColor),
                         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 4)]),
                       child: Stack(children: [
-                        const Center(child: Icon(Icons.notifications_outlined, color: VisoraColors.onSurfaceVariant, size: 20)),
+                        Center(child: Icon(Icons.notifications_outlined, color: Theme.of(context).colorScheme.onSurfaceVariant, size: 20)),
                         Positioned(top: 8, right: 8,
                           child: Container(width: 8, height: 8,
                             decoration: BoxDecoration(color: VisoraColors.error, shape: BoxShape.circle,
@@ -100,37 +83,18 @@ class HomeScreen extends ConsumerWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: 10),
-                // Profile avatar → profile sheet
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(20),
-                    onTap: () => _showProfile(context, ref),
-                    child: Container(
-                      width: 40, height: 40,
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(colors: [Color(0xFF4285F4), Color(0xFF1A73E8)]),
-                        shape: BoxShape.circle,
-                        boxShadow: [BoxShadow(color: VisoraColors.primary.withValues(alpha: 0.3), blurRadius: 6)]),
-                      child: Center(child: Text(
-                        displayName[0].toUpperCase(),
-                        style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white),
-                      )),
-                    ),
-                  ),
-                ),
+                const SizedBox(width: 50), // space for MainShell profile avatar
               ]).animate().fadeIn(duration: 300.ms).slideY(begin: -0.15),
 
               const SizedBox(height: 24),
 
               // ── Greeting ──
               Text('${_greeting()}, $displayName', style: GoogleFonts.inter(
-                fontSize: 24, fontWeight: FontWeight.w700, color: VisoraColors.onSurface, letterSpacing: -0.3))
+                fontSize: 24, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface, letterSpacing: -0.3))
                 .animate().fadeIn(delay: 50.ms, duration: 400.ms).slideY(begin: 0.1),
               const SizedBox(height: 4),
               Text('$dateStr · 3 audits pending', style: GoogleFonts.inter(
-                fontSize: 14, color: VisoraColors.onSurfaceVariant))
+                fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant))
                 .animate().fadeIn(delay: 100.ms, duration: 400.ms),
 
               const SizedBox(height: 24),
@@ -139,10 +103,10 @@ class HomeScreen extends ConsumerWidget {
               VisoraCard(padding: const EdgeInsets.all(20), child: Column(children: [
                 Align(alignment: Alignment.centerLeft,
                   child: Text('System Overview', style: GoogleFonts.inter(
-                    fontSize: 18, fontWeight: FontWeight.w600, color: VisoraColors.onSurface))),
+                    fontSize: 18, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface))),
                 const SizedBox(height: 20),
                 Row(children: [
-                  Expanded(child: _StatCol(label: 'TOTAL AUDITS', value: '12', color: VisoraColors.onSurface)),
+                  Expanded(child: _StatCol(label: 'TOTAL AUDITS', value: '12', color: Theme.of(context).colorScheme.onSurface)),
                   Expanded(child: _StatCol(label: 'HIGH RISK', value: '3', color: VisoraColors.error)),
                   Expanded(child: _StatCol(label: 'AVG FAIRNESS', value: '84', color: VisoraColors.primary, suffix: '%')),
                 ]),
@@ -152,11 +116,11 @@ class HomeScreen extends ConsumerWidget {
                 Row(children: [
                   // Donut chart
                   SizedBox(width: 48, height: 48,
-                    child: CustomPaint(painter: _DonutPainter(0.84))),
+                    child: CustomPaint(painter: _DonutPainter(0.84, textColor: Theme.of(context).colorScheme.onSurface))),
                   const SizedBox(width: 12),
                   Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text('Model Fairness Score', style: GoogleFonts.inter(
-                      fontSize: 13, fontWeight: FontWeight.w500, color: VisoraColors.onSurface)),
+                      fontSize: 13, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onSurface)),
                     const SizedBox(height: 2),
                     Row(children: [
                       Icon(Icons.trending_up_rounded, color: VisoraColors.success, size: 14),
@@ -181,9 +145,9 @@ class HomeScreen extends ConsumerWidget {
               // ── AI Insight Card ──
               Container(
                 decoration: BoxDecoration(
-                  color: VisoraColors.surfaceLowest,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: VisoraColors.outlineVariant),
+                  border: Border.all(color: Theme.of(context).dividerColor),
                   boxShadow: [
                     BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 8, offset: const Offset(0, 2)),
                   ],
@@ -199,11 +163,11 @@ class HomeScreen extends ConsumerWidget {
                       Icon(Icons.auto_awesome_rounded, color: VisoraColors.primary, size: 20),
                       const SizedBox(width: 8),
                       Text('AI Insight', style: GoogleFonts.inter(
-                        fontSize: 18, fontWeight: FontWeight.w600, color: VisoraColors.onSurface)),
+                        fontSize: 18, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
                     ]),
                     const SizedBox(height: 12),
                     RichText(text: TextSpan(
-                      style: GoogleFonts.inter(fontSize: 14, color: VisoraColors.onSurfaceVariant, height: 1.6),
+                      style: GoogleFonts.inter(fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6),
                       children: [
                         const TextSpan(text: 'Neural mapping detected a '),
                         TextSpan(text: '4.2% gender skew', style: GoogleFonts.inter(
@@ -213,7 +177,7 @@ class HomeScreen extends ConsumerWidget {
                     )),
                     const SizedBox(height: 20),
                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                      Text('Confidence Level', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500, color: VisoraColors.onSurfaceVariant)),
+                      Text('Confidence Level', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onSurfaceVariant)),
                       Text('92%', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: VisoraColors.primary)),
                     ]),
                     const SizedBox(height: 8),
@@ -238,7 +202,7 @@ class HomeScreen extends ConsumerWidget {
               // ── Recent Audits ──
               Row(children: [
                 Text('Recent Audits', style: GoogleFonts.inter(
-                  fontSize: 18, fontWeight: FontWeight.w600, color: VisoraColors.onSurface)),
+                  fontSize: 18, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
                 const Spacer(),
                 MouseRegion(cursor: SystemMouseCursors.click,
                   child: GestureDetector(onTap: () => context.go('/reports'),
@@ -295,11 +259,11 @@ class _StatCol extends StatelessWidget {
   const _StatCol({required this.label, required this.value, required this.color, this.suffix});
   @override
   Widget build(BuildContext context) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    Text(label, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: VisoraColors.onSurfaceVariant, letterSpacing: 0.5)),
+    Text(label, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 0.5)),
     const SizedBox(height: 6),
     RichText(text: TextSpan(children: [
       TextSpan(text: value, style: GoogleFonts.inter(fontSize: 36, fontWeight: FontWeight.w700, color: color)),
-      if (suffix != null) TextSpan(text: suffix, style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.w400, color: VisoraColors.onSurfaceVariant)),
+      if (suffix != null) TextSpan(text: suffix, style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.onSurfaceVariant)),
     ])),
   ]);
 }
@@ -316,9 +280,9 @@ class _AuditCard extends StatelessWidget {
       child: GestureDetector(onTap: () => context.push('/results'),
         child: Container(
           decoration: BoxDecoration(
-            color: VisoraColors.surfaceLowest,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: VisoraColors.outlineVariant),
+            border: Border.all(color: Theme.of(context).dividerColor),
             boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 8, offset: const Offset(0, 2))],
           ),
           child: Stack(children: [
@@ -334,9 +298,9 @@ class _AuditCard extends StatelessWidget {
                   child: Icon(icon, color: iconColor, size: 20)),
                 const SizedBox(width: 16),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(name, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: VisoraColors.onSurface), overflow: TextOverflow.ellipsis),
+                  Text(name, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface), overflow: TextOverflow.ellipsis),
                   const SizedBox(height: 2),
-                  Text(date, style: GoogleFonts.inter(fontSize: 12, color: VisoraColors.onSurfaceVariant), overflow: TextOverflow.ellipsis),
+                  Text(date, style: GoogleFonts.inter(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant), overflow: TextOverflow.ellipsis),
                 ])),
                 const SizedBox(width: 8),
                 SeverityBadge(label: severity),
@@ -351,7 +315,8 @@ class _AuditCard extends StatelessWidget {
 // ── Donut Painter ──
 class _DonutPainter extends CustomPainter {
   final double progress;
-  _DonutPainter(this.progress);
+  final Color textColor;
+  _DonutPainter(this.progress, {this.textColor = const Color(0xFF1A1A2E)});
   @override
   void paint(Canvas canvas, Size size) {
     final c = Offset(size.width / 2, size.height / 2);
@@ -360,7 +325,7 @@ class _DonutPainter extends CustomPainter {
     canvas.drawArc(Rect.fromCircle(center: c, radius: r), -1.5708, progress * 6.2832, false,
       Paint()..color = VisoraColors.primary..style = PaintingStyle.stroke..strokeWidth = 3..strokeCap = StrokeCap.round);
     final tp = TextPainter(
-      text: TextSpan(text: '${(progress * 100).round()}%', style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w700, color: VisoraColors.onSurface)),
+      text: TextSpan(text: '${(progress * 100).round()}%', style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w700, color: textColor)),
       textDirection: TextDirection.ltr)..layout();
     tp.paint(canvas, Offset(c.dx - tp.width / 2, c.dy - tp.height / 2));
   }
@@ -382,13 +347,13 @@ class _NotificationsSheet extends StatelessWidget {
       ),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         Container(margin: const EdgeInsets.only(top: 12, bottom: 4), width: 40, height: 4,
-          decoration: BoxDecoration(color: VisoraColors.outlineVariant, borderRadius: BorderRadius.circular(2))),
+          decoration: BoxDecoration(color: Theme.of(context).dividerColor, borderRadius: BorderRadius.circular(2))),
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 12, 12, 8),
           child: Row(children: [
             const Icon(Icons.notifications_rounded, color: VisoraColors.primary, size: 22),
             const SizedBox(width: 8),
-            Text('Notifications', style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w700, color: VisoraColors.onSurface)),
+            Text('Notifications', style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface)),
             const Spacer(),
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -427,7 +392,7 @@ class _NotificationsSheet extends StatelessWidget {
                 time: '2 days ago', isUnread: false,
               ),
               _NotifTile(
-                icon: Icons.update_rounded, color: VisoraColors.onSurfaceVariant,
+                icon: Icons.update_rounded, color: const Color(0xFF5F6368),
                 title: 'System Update',
                 subtitle: 'Visora engine updated to v3.1 — improved Equalized Odds metric',
                 time: '3 days ago', isUnread: false,
@@ -453,9 +418,9 @@ class _NotifTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: isUnread ? VisoraColors.primaryContainer.withValues(alpha: 0.3) : VisoraColors.surfaceLowest,
+        color: isUnread ? VisoraColors.primaryContainer.withValues(alpha: 0.3) : Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: VisoraColors.outlineVariant),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Container(width: 36, height: 36,
@@ -464,13 +429,13 @@ class _NotifTile extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
-            Expanded(child: Text(title, style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: VisoraColors.onSurface))),
+            Expanded(child: Text(title, style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface))),
             if (isUnread) Container(width: 8, height: 8, decoration: const BoxDecoration(color: VisoraColors.primary, shape: BoxShape.circle)),
           ]),
           const SizedBox(height: 3),
-          Text(subtitle, style: GoogleFonts.inter(fontSize: 12, color: VisoraColors.onSurfaceVariant, height: 1.4)),
+          Text(subtitle, style: GoogleFonts.inter(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.4)),
           const SizedBox(height: 4),
-          Text(time, style: GoogleFonts.inter(fontSize: 11, color: VisoraColors.onSurfaceVariant)),
+          Text(time, style: GoogleFonts.inter(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant)),
         ])),
       ]),
     );
@@ -489,10 +454,10 @@ class _ProfileDrawer extends StatelessWidget {
     final displayName = userName[0].toUpperCase() + userName.substring(1);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bg = isDark ? const Color(0xFF1E1E1E) : VisoraColors.background;
-    final cardBg = isDark ? const Color(0xFF2A2A2A) : VisoraColors.surfaceLowest;
+    final cardBg = isDark ? const Color(0xFF2A2A2A) : Theme.of(context).colorScheme.surface;
     final textColor = isDark ? const Color(0xFFE8EAED) : VisoraColors.onSurface;
     final subColor = isDark ? const Color(0xFF9AA0A6) : VisoraColors.onSurfaceVariant;
-    final border = isDark ? const Color(0xFF333333) : VisoraColors.outlineVariant;
+    final border = isDark ? const Color(0xFF333333) : Theme.of(context).dividerColor;
 
     return Material(
       color: bg,
@@ -882,3 +847,76 @@ class _HelpSheet extends StatelessWidget {
   }
 }
 
+// ── Notifications Dropdown (slides from top) ──
+class _NotificationsDropdown extends StatelessWidget {
+  const _NotificationsDropdown();
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final bg = Theme.of(context).scaffoldBackgroundColor;
+    final notifications = [
+      {'icon': Icons.warning_amber_rounded, 'color': const Color(0xFFEA4335), 'title': 'High-Risk Bias Detected', 'subtitle': 'Dataset "hiring_2024.csv" flagged — Gender bias ratio 0.62', 'time': '2 min ago'},
+      {'icon': Icons.check_circle_outline, 'color': const Color(0xFF34A853), 'title': 'Audit Complete', 'subtitle': 'Loan approval model passed all fairness checks', 'time': '1 hr ago'},
+      {'icon': Icons.auto_fix_high, 'color': const Color(0xFF4285F4), 'title': 'Auto-Scan Result', 'subtitle': 'New upload analyzed — 3 potential bias indicators', 'time': '3 hrs ago'},
+      {'icon': Icons.shield_outlined, 'color': const Color(0xFFFBBC04), 'title': 'Security Update', 'subtitle': 'Encryption keys rotated successfully', 'time': 'Yesterday'},
+    ];
+
+    return SafeArea(
+      child: Container(
+        margin: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+        constraints: const BoxConstraints(maxWidth: 420),
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(color: Colors.black.withValues(alpha: 0.15), blurRadius: 24, offset: const Offset(0, 8)),
+          ],
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 12, 8),
+              child: Row(children: [
+                Icon(Icons.notifications_rounded, color: cs.primary, size: 22),
+                const SizedBox(width: 10),
+                Text('Notifications', style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w700, color: cs.onSurface)),
+                const Spacer(),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('Done', style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: cs.primary)),
+                ),
+              ]),
+            ),
+            Divider(height: 1, color: Theme.of(context).dividerColor),
+            ...notifications.map((n) => InkWell(
+              onTap: () {},
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Container(
+                    width: 36, height: 36,
+                    decoration: BoxDecoration(
+                      color: (n['color'] as Color).withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(10)),
+                    child: Icon(n['icon'] as IconData, color: n['color'] as Color, size: 18),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(n['title'] as String, style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: cs.onSurface)),
+                    const SizedBox(height: 2),
+                    Text(n['subtitle'] as String, style: GoogleFonts.inter(fontSize: 12, color: cs.onSurface.withValues(alpha: 0.6))),
+                  ])),
+                  const SizedBox(width: 8),
+                  Text(n['time'] as String, style: GoogleFonts.inter(fontSize: 10, color: cs.onSurface.withValues(alpha: 0.4))),
+                ]),
+              ),
+            )),
+            const SizedBox(height: 8),
+          ]),
+        ),
+      ),
+    );
+  }
+}

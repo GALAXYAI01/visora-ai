@@ -48,7 +48,7 @@ class _TextScannerScreenState extends ConsumerState<TextScannerScreen> {
                 Icon(Icons.radar_rounded, color: VisoraColors.primary, size: 24),
                 const SizedBox(width: 8),
                 Text('AI Bias Scanner', style: GoogleFonts.inter(
-                  fontSize: 18, fontWeight: FontWeight.w700, color: VisoraColors.onSurface)),
+                  fontSize: 18, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface)),
                 const Spacer(),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -62,17 +62,18 @@ class _TextScannerScreenState extends ConsumerState<TextScannerScreen> {
                       fontSize: 11, fontWeight: FontWeight.w600, color: VisoraColors.primary)),
                   ]),
                 ),
+                const SizedBox(width: 50), // space for profile avatar
               ]).animate().fadeIn(duration: 200.ms),
 
               Divider(height: 32, color: VisoraColors.surface),
 
               // ── Title ──
               Text('Text Bias Scanner', style: GoogleFonts.inter(
-                fontSize: 28, fontWeight: FontWeight.w700, color: VisoraColors.onSurface, letterSpacing: -0.4))
+                fontSize: 28, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface, letterSpacing: -0.4))
                 .animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
               const SizedBox(height: 8),
               Text('Analyze any text — job listings, policies, model outputs — for hidden bias using Gemini AI.',
-                style: GoogleFonts.inter(fontSize: 14, color: VisoraColors.onSurfaceVariant, height: 1.6))
+                style: GoogleFonts.inter(fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6))
                 .animate().fadeIn(delay: 150.ms),
 
               const SizedBox(height: 24),
@@ -80,7 +81,7 @@ class _TextScannerScreenState extends ConsumerState<TextScannerScreen> {
               // ── Source Text ──
               VisoraCard(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text('Source Text', style: GoogleFonts.inter(
-                  fontSize: 16, fontWeight: FontWeight.w600, color: VisoraColors.onSurface)),
+                  fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
                 const SizedBox(height: 12),
                 Container(
                   decoration: BoxDecoration(
@@ -89,12 +90,12 @@ class _TextScannerScreenState extends ConsumerState<TextScannerScreen> {
                   child: TextField(
                     controller: _ctrl,
                     maxLines: 6,
-                    style: GoogleFonts.inter(fontSize: 14, color: VisoraColors.onSurface, height: 1.6),
+                    style: GoogleFonts.inter(fontSize: 14, color: Theme.of(context).colorScheme.onSurface, height: 1.6),
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.all(16),
                       hintText: 'Paste your text here — job descriptions, loan policies, HR rules, model decisions...',
-                      hintStyle: GoogleFonts.inter(fontSize: 14, color: VisoraColors.onSurfaceVariant),
+                      hintStyle: GoogleFonts.inter(fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant),
                       filled: false)),
                 ),
               ])).animate().fadeIn(delay: 200.ms, duration: 500.ms).slideY(begin: 0.06),
@@ -103,7 +104,7 @@ class _TextScannerScreenState extends ConsumerState<TextScannerScreen> {
 
               // ── Quick Examples ──
               Text('QUICK EXAMPLES', style: GoogleFonts.inter(
-                fontSize: 11, fontWeight: FontWeight.w600, color: VisoraColors.onSurfaceVariant, letterSpacing: 1)),
+                fontSize: 11, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 1)),
               const SizedBox(height: 8),
               SingleChildScrollView(scrollDirection: Axis.horizontal,
                 child: Row(children: [
@@ -133,7 +134,7 @@ class _TextScannerScreenState extends ConsumerState<TextScannerScreen> {
                     const CircularProgressIndicator(color: VisoraColors.primary),
                     const SizedBox(height: 12),
                     Text('Analyzing with Gemini AI...', style: GoogleFonts.inter(
-                      fontSize: 13, color: VisoraColors.onSurfaceVariant)),
+                      fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant)),
                   ]))
                 : SizedBox(width: double.infinity, height: 52,
                     child: ElevatedButton.icon(
@@ -215,7 +216,7 @@ class _TextScannerScreenState extends ConsumerState<TextScannerScreen> {
           Text('$risk RISK', style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w700, color: color, letterSpacing: 0.5)),
           const SizedBox(height: 4),
           Text(result['summary']?.toString() ?? '',
-            style: GoogleFonts.inter(fontSize: 13, color: VisoraColors.onSurface, height: 1.5)),
+            style: GoogleFonts.inter(fontSize: 13, color: Theme.of(context).colorScheme.onSurface, height: 1.5)),
         ])),
       ]),
     );
@@ -226,13 +227,13 @@ class _TextScannerScreenState extends ConsumerState<TextScannerScreen> {
     final scoreNum = score is int ? score.toDouble() : (score as num).toDouble();
     return VisoraCard(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text('BIAS SCORE', style: GoogleFonts.inter(
-        fontSize: 11, fontWeight: FontWeight.w600, color: VisoraColors.onSurfaceVariant, letterSpacing: 1)),
+        fontSize: 11, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 1)),
       const SizedBox(height: 12),
       Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
         Text('${scoreNum.toInt()}', style: GoogleFonts.inter(fontSize: 42, fontWeight: FontWeight.w700,
           color: scoreNum > 60 ? VisoraColors.error : scoreNum > 30 ? const Color(0xFFF9AB00) : VisoraColors.success)),
         Padding(padding: const EdgeInsets.only(bottom: 8),
-          child: Text('/100', style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w500, color: VisoraColors.onSurfaceVariant))),
+          child: Text('/100', style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onSurfaceVariant))),
       ]),
       const SizedBox(height: 12),
       ClipRRect(borderRadius: BorderRadius.circular(4),
@@ -252,7 +253,7 @@ class _TextScannerScreenState extends ConsumerState<TextScannerScreen> {
         Icon(Icons.flag_rounded, color: VisoraColors.error, size: 18),
         const SizedBox(width: 8),
         Text('Flagged Phrases (${flags.length})', style: GoogleFonts.inter(
-          fontSize: 16, fontWeight: FontWeight.w600, color: VisoraColors.onSurface)),
+          fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
       ]),
       const SizedBox(height: 16),
       ...flags.map((flag) {
@@ -283,10 +284,10 @@ class _TextScannerScreenState extends ConsumerState<TextScannerScreen> {
             ]),
             const SizedBox(height: 10),
             Text('"${f['phrase'] ?? ''}"', style: GoogleFonts.inter(
-              fontSize: 14, fontWeight: FontWeight.w600, color: VisoraColors.onSurface, fontStyle: FontStyle.italic)),
+              fontSize: 14, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface, fontStyle: FontStyle.italic)),
             const SizedBox(height: 6),
             Text(f['explanation']?.toString() ?? '', style: GoogleFonts.inter(
-              fontSize: 13, color: VisoraColors.onSurfaceVariant, height: 1.5)),
+              fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5)),
             if (f['suggestion'] != null) ...[
               const SizedBox(height: 8),
               Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -309,7 +310,7 @@ class _TextScannerScreenState extends ConsumerState<TextScannerScreen> {
         Icon(Icons.gavel_rounded, color: const Color(0xFFF9AB00), size: 18),
         const SizedBox(width: 8),
         Text('Legal & Regulatory Risks', style: GoogleFonts.inter(
-          fontSize: 16, fontWeight: FontWeight.w600, color: VisoraColors.onSurface)),
+          fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
       ]),
       const SizedBox(height: 12),
       ...risks.map((r) => Padding(
@@ -317,7 +318,7 @@ class _TextScannerScreenState extends ConsumerState<TextScannerScreen> {
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Icon(Icons.warning_amber_rounded, color: const Color(0xFFF9AB00), size: 16),
           const SizedBox(width: 8),
-          Expanded(child: Text(r, style: GoogleFonts.inter(fontSize: 13, color: VisoraColors.onSurface, height: 1.4))),
+          Expanded(child: Text(r, style: GoogleFonts.inter(fontSize: 13, color: Theme.of(context).colorScheme.onSurface, height: 1.4))),
         ]),
       )),
     ]));
@@ -329,7 +330,7 @@ class _TextScannerScreenState extends ConsumerState<TextScannerScreen> {
         Icon(Icons.auto_fix_high_rounded, color: VisoraColors.success, size: 18),
         const SizedBox(width: 8),
         Text('AI-Suggested Improvement', style: GoogleFonts.inter(
-          fontSize: 16, fontWeight: FontWeight.w600, color: VisoraColors.onSurface)),
+          fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
       ]),
       const SizedBox(height: 12),
       Container(
@@ -355,10 +356,10 @@ class _ExampleChip extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: VisoraColors.surfaceLowest,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(9999),
             border: Border.all(color: VisoraColors.outline)),
           child: Text(label, style: GoogleFonts.inter(
-            fontSize: 12, fontWeight: FontWeight.w500, color: VisoraColors.onSurfaceVariant)))));
+            fontSize: 12, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onSurfaceVariant)))));
   }
 }

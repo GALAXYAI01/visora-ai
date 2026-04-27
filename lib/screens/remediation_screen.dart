@@ -34,11 +34,11 @@ class RemediationScreen extends ConsumerWidget {
                 Icon(Icons.bar_chart_rounded, color: VisoraColors.primary, size: 24),
                 const SizedBox(width: 8),
                 Text('Audit Overview', style: GoogleFonts.inter(
-                  fontSize: 18, fontWeight: FontWeight.w700, color: VisoraColors.onSurface)),
+                  fontSize: 18, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface)),
                 const Spacer(),
                 Container(width: 36, height: 36,
                   decoration: BoxDecoration(color: VisoraColors.surfaceHigh, shape: BoxShape.circle),
-                  child: const Icon(Icons.person_rounded, color: VisoraColors.onSurfaceVariant, size: 20)),
+                  child: Icon(Icons.person_rounded, color: Theme.of(context).colorScheme.onSurfaceVariant, size: 20)),
               ]).animate().fadeIn(duration: 200.ms),
 
               Divider(height: 32, color: VisoraColors.surface),
@@ -59,7 +59,7 @@ class RemediationScreen extends ConsumerWidget {
                       fontSize: 14, fontWeight: FontWeight.w700, color: VisoraColors.success)),
                     const SizedBox(height: 2),
                     Text('Model parameters have been optimized to meet required fairness thresholds.',
-                      style: GoogleFonts.inter(fontSize: 13, color: VisoraColors.onSurface.withValues(alpha: 0.7), height: 1.4)),
+                      style: GoogleFonts.inter(fontSize: 13, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), height: 1.4)),
                   ])),
                 ]),
               ).animate().fadeIn(delay: 100.ms, duration: 500.ms).slideY(begin: 0.08),
@@ -69,19 +69,19 @@ class RemediationScreen extends ConsumerWidget {
               // ── Performance Trade-off Card ──
               VisoraCard(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(children: [
-                  Icon(Icons.tune_rounded, color: VisoraColors.onSurfaceVariant, size: 20),
+                  Icon(Icons.tune_rounded, color: Theme.of(context).colorScheme.onSurfaceVariant, size: 20),
                   const SizedBox(width: 8),
                   Text('Performance Trade-off', style: GoogleFonts.inter(
-                    fontSize: 16, fontWeight: FontWeight.w600, color: VisoraColors.onSurface)),
+                    fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
                 ]),
                 const SizedBox(height: 8),
                 Text('Adjustments applied via adversarial debiasing.',
-                  style: GoogleFonts.inter(fontSize: 14, color: VisoraColors.onSurfaceVariant)),
+                  style: GoogleFonts.inter(fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant)),
                 const SizedBox(height: 20),
                 Row(children: [
                   Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text('ACCURACY IMPACT', style: GoogleFonts.inter(
-                      fontSize: 11, fontWeight: FontWeight.w600, color: VisoraColors.onSurfaceVariant, letterSpacing: 1)),
+                      fontSize: 11, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 1)),
                     const SizedBox(height: 8),
                     Row(children: [
                       Icon(Icons.trending_down_rounded, color: VisoraColors.error, size: 18),
@@ -92,7 +92,7 @@ class RemediationScreen extends ConsumerWidget {
                   ])),
                   Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text('FAIRNESS IMPACT', style: GoogleFonts.inter(
-                      fontSize: 11, fontWeight: FontWeight.w600, color: VisoraColors.onSurfaceVariant, letterSpacing: 1)),
+                      fontSize: 11, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 1)),
                     const SizedBox(height: 8),
                     Row(children: [
                       Icon(Icons.trending_up_rounded, color: VisoraColors.primary, size: 18),
@@ -134,17 +134,17 @@ class RemediationScreen extends ConsumerWidget {
                   Icon(Icons.compare_arrows_rounded, color: VisoraColors.primary, size: 20),
                   const SizedBox(width: 8),
                   Text('Metric Comparison', style: GoogleFonts.inter(
-                    fontSize: 16, fontWeight: FontWeight.w600, color: VisoraColors.onSurface)),
+                    fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
                 ]),
                 const SizedBox(height: 16),
                 // Table header
                 Row(children: [
                   Expanded(flex: 2, child: Text('METRIC', style: GoogleFonts.inter(
-                    fontSize: 11, fontWeight: FontWeight.w600, color: VisoraColors.onSurfaceVariant, letterSpacing: 1))),
+                    fontSize: 11, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 1))),
                   Expanded(child: Text('BEFORE\nREMEDIATION', textAlign: TextAlign.center, style: GoogleFonts.inter(
-                    fontSize: 10, fontWeight: FontWeight.w600, color: VisoraColors.onSurfaceVariant, letterSpacing: 0.5))),
+                    fontSize: 10, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 0.5))),
                   Expanded(child: Text('AFTER\nREMEDIATION', textAlign: TextAlign.center, style: GoogleFonts.inter(
-                    fontSize: 10, fontWeight: FontWeight.w600, color: VisoraColors.onSurfaceVariant, letterSpacing: 0.5))),
+                    fontSize: 10, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 0.5))),
                 ]),
                 const SizedBox(height: 12),
                 Divider(color: VisoraColors.surface),
@@ -186,7 +186,7 @@ class _CompRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(children: [
       Expanded(flex: 2, child: Text(label, style: GoogleFonts.inter(
-        fontSize: 14, color: VisoraColors.onSurface))),
+        fontSize: 14, color: Theme.of(context).colorScheme.onSurface))),
       Expanded(child: Center(child: Text(before, style: GoogleFonts.inter(
         fontSize: 14, fontWeight: FontWeight.w600,
         color: beforeBad ? VisoraColors.error : VisoraColors.success,
@@ -254,7 +254,7 @@ class _DownloadPdfButtonState extends State<_DownloadPdfButton> {
         child: Container(
           width: double.infinity, height: 52,
           decoration: BoxDecoration(
-            color: VisoraColors.surfaceLowest,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: VisoraColors.outline)),
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -262,11 +262,11 @@ class _DownloadPdfButtonState extends State<_DownloadPdfButton> {
               const SizedBox(width: 20, height: 20,
                 child: CircularProgressIndicator(strokeWidth: 2, color: VisoraColors.primary))
             else
-              Icon(Icons.picture_as_pdf_rounded, color: VisoraColors.onSurface, size: 20),
+              Icon(Icons.picture_as_pdf_rounded, color: Theme.of(context).colorScheme.onSurface, size: 20),
             const SizedBox(width: 8),
             Text(_isGenerating ? 'Generating PDF...' : 'Download PDF Report',
               style: GoogleFonts.inter(
-                fontSize: 14, fontWeight: FontWeight.w500, color: VisoraColors.onSurface)),
+                fontSize: 14, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onSurface)),
           ])),
       ),
     ).animate().fadeIn(delay: 450.ms);
@@ -455,7 +455,7 @@ class _DownloadDebiasedButtonState extends State<_DownloadDebiasedButton> {
         child: Container(
           width: double.infinity, height: 52,
           decoration: BoxDecoration(
-            color: VisoraColors.surfaceLowest,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: VisoraColors.success.withValues(alpha: 0.5))),
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [

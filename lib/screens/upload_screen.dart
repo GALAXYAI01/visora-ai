@@ -98,10 +98,10 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
               Row(children: [
                 MouseRegion(cursor: SystemMouseCursors.click,
                   child: GestureDetector(onTap: () => context.pop(),
-                    child: const Icon(Icons.arrow_back_rounded, color: VisoraColors.onSurface, size: 24))),
+                    child: Icon(Icons.arrow_back_rounded, color: Theme.of(context).colorScheme.onSurface, size: 24))),
                 const Spacer(),
                 Text('New Audit', style: GoogleFonts.inter(
-                  fontSize: 18, fontWeight: FontWeight.w700, color: VisoraColors.onSurface)),
+                  fontSize: 18, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface)),
                 const Spacer(),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -109,7 +109,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                     color: VisoraColors.surfaceHigh,
                     borderRadius: BorderRadius.circular(9999)),
                   child: Text('1 OF 2', style: GoogleFonts.inter(
-                    fontSize: 11, fontWeight: FontWeight.w600, color: VisoraColors.onSurfaceVariant, letterSpacing: 1))),
+                    fontSize: 11, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 1))),
               ]).animate().fadeIn(duration: 300.ms).slideY(begin: -0.1),
 
               const SizedBox(height: 24),
@@ -135,7 +135,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                           child: const Icon(Icons.insert_drive_file_rounded, color: VisoraColors.success, size: 24)),
                         const SizedBox(width: 16),
                         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                          Text(upload.fileName!, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: VisoraColors.onSurface)),
+                          Text(upload.fileName!, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
                           const SizedBox(height: 2),
                           Text('Tap to change file', style: GoogleFonts.inter(fontSize: 12, color: VisoraColors.success)),
                         ])),
@@ -150,9 +150,9 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                             child: const Icon(Icons.cloud_upload_rounded, color: VisoraColors.primary, size: 32)),
                           const SizedBox(height: 20),
                           Text('Upload Your Dataset', style: GoogleFonts.inter(
-                            fontSize: 18, fontWeight: FontWeight.w600, color: VisoraColors.onSurface)),
+                            fontSize: 18, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
                           const SizedBox(height: 8),
-                          Text('CSV files up to 50MB', style: GoogleFonts.inter(fontSize: 14, color: VisoraColors.onSurfaceVariant)),
+                          Text('CSV files up to 50MB', style: GoogleFonts.inter(fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant)),
                           const SizedBox(height: 20),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -171,13 +171,13 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
 
               const SizedBox(height: 24),
               Text('CONFIGURE AUDIT', style: GoogleFonts.inter(
-                fontSize: 12, fontWeight: FontWeight.w600, color: VisoraColors.onSurfaceVariant, letterSpacing: 1)),
+                fontSize: 12, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 1)),
               const SizedBox(height: 12),
 
               // ── Protected Attribute ──
               VisoraCard(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text('PROTECTED ATTRIBUTE', style: GoogleFonts.inter(
-                  fontSize: 11, fontWeight: FontWeight.w600, color: VisoraColors.onSurfaceVariant, letterSpacing: 1)),
+                  fontSize: 11, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 1)),
                 const SizedBox(height: 12),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -188,8 +188,8 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                     child: DropdownButton<String>(
                       isExpanded: true,
                       value: upload.protectedAttr,
-                      dropdownColor: VisoraColors.surfaceLowest,
-                      style: GoogleFonts.inter(fontSize: 14, color: VisoraColors.onSurface),
+                      dropdownColor: Theme.of(context).colorScheme.surface,
+                      style: GoogleFonts.inter(fontSize: 14, color: Theme.of(context).colorScheme.onSurface),
                       items: ['sex', 'race', 'age'].map((e) => DropdownMenuItem(value: e,
                         child: Text(e[0].toUpperCase() + e.substring(1)))).toList(),
                       onChanged: (v) => ref.read(uploadProvider.notifier).setProtectedAttr(v!)))),
@@ -203,7 +203,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(
-                            color: selected ? VisoraColors.primary : VisoraColors.surfaceLowest,
+                            color: selected ? VisoraColors.primary : Theme.of(context).colorScheme.surface,
                             borderRadius: BorderRadius.circular(9999),
                             border: Border.all(color: selected ? VisoraColors.primary : VisoraColors.outline)),
                           child: Text(chip, style: GoogleFonts.inter(
@@ -217,7 +217,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
               // ── Target Column ──
               VisoraCard(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text('TARGET COLUMN', style: GoogleFonts.inter(
-                  fontSize: 11, fontWeight: FontWeight.w600, color: VisoraColors.onSurfaceVariant, letterSpacing: 1)),
+                  fontSize: 11, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 1)),
                 const SizedBox(height: 12),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -228,8 +228,8 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                     child: DropdownButton<String>(
                       isExpanded: true,
                       value: upload.targetCol,
-                      dropdownColor: VisoraColors.surfaceLowest,
-                      style: GoogleFonts.inter(fontSize: 14, color: VisoraColors.onSurface),
+                      dropdownColor: Theme.of(context).colorScheme.surface,
+                      style: GoogleFonts.inter(fontSize: 14, color: Theme.of(context).colorScheme.onSurface),
                       items: ['income', 'approved', 'hired', 'score'].map((e) => DropdownMenuItem(value: e,
                         child: Text(e[0].toUpperCase() + e.substring(1)))).toList(),
                       onChanged: (v) => ref.read(uploadProvider.notifier).setTargetCol(v!)))),
@@ -248,10 +248,10 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                   const SizedBox(width: 12),
                   Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text('What is bias auditing?', style: GoogleFonts.inter(
-                      fontSize: 14, fontWeight: FontWeight.w600, color: VisoraColors.onSurface)),
+                      fontSize: 14, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
                     const SizedBox(height: 4),
                     Text('Auditing identifies disproportionate outcomes across demographic segments to ensure fair algorithmic decision-making.',
-                      style: GoogleFonts.inter(fontSize: 14, color: VisoraColors.onSurfaceVariant, height: 1.5)),
+                      style: GoogleFonts.inter(fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5)),
                   ])),
                 ]),
               ).animate().fadeIn(delay: 350.ms, duration: 400.ms),
@@ -279,7 +279,7 @@ class _StepDot extends StatelessWidget {
   Widget build(BuildContext context) => Column(children: [
     Container(width: 36, height: 36,
       decoration: BoxDecoration(
-        color: active ? VisoraColors.primary : VisoraColors.surfaceLowest,
+        color: active ? VisoraColors.primary : Theme.of(context).colorScheme.surface,
         shape: BoxShape.circle,
         border: Border.all(color: active ? VisoraColors.primary : VisoraColors.outline)),
       child: Center(child: Text(number, style: GoogleFonts.inter(
@@ -325,7 +325,7 @@ class _LocalAuditProgressDialogState extends State<_LocalAuditProgressDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: VisoraColors.surfaceLowest,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(28),
@@ -335,10 +335,10 @@ class _LocalAuditProgressDialogState extends State<_LocalAuditProgressDialog> {
             child: CircularProgressIndicator(color: VisoraColors.primary, strokeWidth: 3)),
           const SizedBox(height: 20),
           Text('Analyzing Dataset', style: GoogleFonts.inter(
-            fontSize: 18, fontWeight: FontWeight.w700, color: VisoraColors.onSurface)),
+            fontSize: 18, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface)),
           const SizedBox(height: 8),
           Text('Running local bias audit engine...', style: GoogleFonts.inter(
-            fontSize: 13, color: VisoraColors.onSurfaceVariant)),
+            fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant)),
           const SizedBox(height: 20),
           ...List.generate(_steps.length, (i) => Padding(
             padding: const EdgeInsets.only(bottom: 6),

@@ -79,14 +79,14 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen> with TickerProv
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               // Header
               Text('Analyzing Dataset', style: GoogleFonts.inter(
-                fontSize: 24, fontWeight: FontWeight.w700, color: VisoraColors.onSurface, letterSpacing: -0.3))
+                fontSize: 24, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface, letterSpacing: -0.3))
                 .animate().fadeIn(duration: 300.ms),
               const SizedBox(height: 4),
               Row(children: [
                 Icon(Icons.dataset_rounded, color: VisoraColors.primary, size: 18),
                 const SizedBox(width: 6),
                 Text('Running 5-agent pipeline', style: GoogleFonts.inter(
-                  fontSize: 14, color: VisoraColors.onSurfaceVariant)),
+                  fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant)),
               ]).animate().fadeIn(delay: 50.ms),
 
               const SizedBox(height: 40),
@@ -103,7 +103,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen> with TickerProv
                   const SizedBox(height: 16),
                   Text('${progress.completedAgents.length} OF 5 AGENTS COMPLETE',
                     style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600,
-                      color: VisoraColors.onSurfaceVariant, letterSpacing: 1)),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 1)),
                 ]),
               )).animate().fadeIn(delay: 100.ms, duration: 500.ms).scale(begin: const Offset(0.95, 0.95)),
 
@@ -132,7 +132,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen> with TickerProv
                   Icon(Icons.schedule_rounded, color: VisoraColors.primary, size: 20),
                   const SizedBox(width: 12),
                   Text(progress.isDone ? 'Complete!' : '~${((1 - pct) * 60).round()} seconds remaining',
-                    style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500, color: VisoraColors.onSurface)),
+                    style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onSurface)),
                 ]),
               ).animate().fadeIn(delay: 600.ms),
 
@@ -167,7 +167,7 @@ class _AgentTimelineItem extends StatelessWidget {
               decoration: BoxDecoration(
                 color: status == 'complete' ? VisoraColors.success.withValues(alpha: 0.1)
                      : status == 'active' ? VisoraColors.primary.withValues(alpha: 0.1)
-                     : VisoraColors.surfaceLowest,
+                     : Theme.of(context).colorScheme.surface,
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: status == 'complete' ? VisoraColors.success.withValues(alpha: 0.3)
@@ -188,10 +188,10 @@ class _AgentTimelineItem extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: VisoraColors.surfaceLowest,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: status == 'active' ? VisoraColors.primary.withValues(alpha: 0.3) : VisoraColors.outlineVariant.withValues(alpha: 0.5),
+                color: status == 'active' ? VisoraColors.primary.withValues(alpha: 0.3) : Theme.of(context).dividerColor.withValues(alpha: 0.5),
                 width: status == 'active' ? 2 : 1),
               boxShadow: status == 'active' ? [
                 BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 6, offset: const Offset(0, 2)),

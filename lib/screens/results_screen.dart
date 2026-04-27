@@ -35,7 +35,7 @@ class ResultsScreen extends ConsumerWidget {
                 const Spacer(),
                 Container(width: 36, height: 36,
                   decoration: BoxDecoration(color: VisoraColors.surfaceHigh, shape: BoxShape.circle),
-                  child: const Icon(Icons.person_rounded, color: VisoraColors.onSurfaceVariant, size: 20)),
+                  child: Icon(Icons.person_rounded, color: Theme.of(context).colorScheme.onSurfaceVariant, size: 20)),
               ]).animate().fadeIn(duration: 200.ms),
 
               const SizedBox(height: 16),
@@ -50,11 +50,11 @@ class ResultsScreen extends ConsumerWidget {
 
               const SizedBox(height: 12),
               Text('Bias Results Evaluation', style: GoogleFonts.inter(
-                fontSize: 28, fontWeight: FontWeight.w700, color: VisoraColors.onSurface, letterSpacing: -0.4))
+                fontSize: 28, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface, letterSpacing: -0.4))
                 .animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
               const SizedBox(height: 8),
               Text('Analysis complete across ${result.rowCount.toStringAsFixed(0)} recent records. ${result.biasSeverity == "HIGH" ? "Critical demographic disparities require immediate attention." : "Evaluation indicates acceptable fairness levels."}',
-                style: GoogleFonts.inter(fontSize: 14, color: VisoraColors.onSurfaceVariant, height: 1.6))
+                style: GoogleFonts.inter(fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6))
                 .animate().fadeIn(delay: 150.ms),
 
               const SizedBox(height: 24),
@@ -77,7 +77,7 @@ class ResultsScreen extends ConsumerWidget {
                     Text(result.biasSeverity == 'HIGH'
                       ? 'Model predictions show severe deviation from acceptable parity thresholds across ${result.protectedAttr} attributes. Immediate remediation recommended before deployment.'
                       : 'Model predictions are within acceptable fairness thresholds.',
-                      style: GoogleFonts.inter(fontSize: 13, color: VisoraColors.onSurface.withValues(alpha: 0.8), height: 1.5)),
+                      style: GoogleFonts.inter(fontSize: 13, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8), height: 1.5)),
                   ])),
                 ]),
               ).animate().fadeIn(delay: 200.ms, duration: 400.ms).slideY(begin: 0.06),
@@ -102,16 +102,16 @@ class ResultsScreen extends ConsumerWidget {
               // ── Approval Rates ──
               VisoraCard(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text('Approval Rate by ${result.protectedAttr[0].toUpperCase()}${result.protectedAttr.substring(1)}',
-                  style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w700, color: VisoraColors.onSurface)),
+                  style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface)),
                 const SizedBox(height: 20),
                 ...result.approvalRates.entries.map((e) => Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                       Text('${e.key[0].toUpperCase()}${e.key.substring(1)} Applicants', style: GoogleFonts.inter(
-                        fontSize: 14, color: VisoraColors.onSurface)),
+                        fontSize: 14, color: Theme.of(context).colorScheme.onSurface)),
                       Text('${(e.value * 100).round()}%', style: GoogleFonts.inter(
-                        fontSize: 14, fontWeight: FontWeight.w700, color: VisoraColors.onSurface)),
+                        fontSize: 14, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface)),
                     ]),
                     const SizedBox(height: 8),
                     ClipRRect(borderRadius: BorderRadius.circular(4),
@@ -135,12 +135,12 @@ class ResultsScreen extends ConsumerWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(color: VisoraColors.surfaceHigh, borderRadius: BorderRadius.circular(9999)),
                     child: Text('ACTIONABLE ADVICE', style: GoogleFonts.inter(
-                      fontSize: 11, fontWeight: FontWeight.w600, color: VisoraColors.onSurfaceVariant, letterSpacing: 1))),
+                      fontSize: 11, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 1))),
                 ]),
                 const SizedBox(height: 16),
                 Text(result.geminiExplanation.isNotEmpty ? result.geminiExplanation
                   : "The current model penalizes the 'Tenure at Current Address' feature disproportionately for female applicants. We recommend applying adversarial debiasing techniques or adjusting class weights to mitigate this specific vector without compromising overall model accuracy.",
-                  style: GoogleFonts.inter(fontSize: 14, color: VisoraColors.onSurfaceVariant, height: 1.6)),
+                  style: GoogleFonts.inter(fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6)),
               ])).animate().fadeIn(delay: 500.ms, duration: 400.ms),
 
               const SizedBox(height: 24),
@@ -181,7 +181,7 @@ class _MetricCard extends StatelessWidget {
     return VisoraCard(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Text(label, style: GoogleFonts.inter(
-          fontSize: 11, fontWeight: FontWeight.w600, color: VisoraColors.onSurfaceVariant, letterSpacing: 1)),
+          fontSize: 11, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 1)),
         Icon(icon, color: isGood ? VisoraColors.success : VisoraColors.error, size: 20),
       ]),
       const SizedBox(height: 12),
@@ -195,7 +195,7 @@ class _MetricCard extends StatelessWidget {
           valueColor: AlwaysStoppedAnimation(isGood ? VisoraColors.success : VisoraColors.error), minHeight: 6)),
       const SizedBox(height: 8),
       Align(alignment: Alignment.centerRight,
-        child: Text(threshold, style: GoogleFonts.inter(fontSize: 12, color: VisoraColors.onSurfaceVariant))),
+        child: Text(threshold, style: GoogleFonts.inter(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant))),
     ]));
   }
 }

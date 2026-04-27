@@ -24,27 +24,27 @@ class HumanCostScreen extends ConsumerWidget {
               Row(children: [
                 MouseRegion(cursor: SystemMouseCursors.click,
                   child: GestureDetector(onTap: () => context.canPop() ? context.pop() : context.go('/home'),
-                    child: const Icon(Icons.arrow_back_rounded, color: VisoraColors.onSurface, size: 24))),
+                    child: Icon(Icons.arrow_back_rounded, color: Theme.of(context).colorScheme.onSurface, size: 24))),
                 const SizedBox(width: 12),
                 Icon(Icons.bar_chart_rounded, color: VisoraColors.primary, size: 24),
                 const SizedBox(width: 8),
                 Text('Audit Overview', style: GoogleFonts.inter(
-                  fontSize: 18, fontWeight: FontWeight.w700, color: VisoraColors.onSurface)),
+                  fontSize: 18, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface)),
                 const Spacer(),
                 Container(width: 36, height: 36,
                   decoration: BoxDecoration(color: VisoraColors.surfaceHigh, shape: BoxShape.circle),
-                  child: const Icon(Icons.person_rounded, color: VisoraColors.onSurfaceVariant, size: 20)),
+                  child: Icon(Icons.person_rounded, color: Theme.of(context).colorScheme.onSurfaceVariant, size: 20)),
               ]).animate().fadeIn(duration: 200.ms),
 
               Divider(height: 32, color: VisoraColors.surface),
 
               // ── Title ──
               Text('Human Impact', style: GoogleFonts.inter(
-                fontSize: 28, fontWeight: FontWeight.w700, color: VisoraColors.onSurface, letterSpacing: -0.4))
+                fontSize: 28, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface, letterSpacing: -0.4))
                 .animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
               const SizedBox(height: 4),
               Text('The real cost of biased AI', style: GoogleFonts.inter(
-                fontSize: 14, color: VisoraColors.onSurfaceVariant))
+                fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant))
                 .animate().fadeIn(delay: 150.ms),
 
               const SizedBox(height: 24),
@@ -53,7 +53,7 @@ class HumanCostScreen extends ConsumerWidget {
               VisoraCard(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(children: [
                   Text('Legal Risk Level', style: GoogleFonts.inter(
-                    fontSize: 14, fontWeight: FontWeight.w600, color: VisoraColors.onSurface)),
+                    fontSize: 14, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
                   const Spacer(),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -70,11 +70,11 @@ class HumanCostScreen extends ConsumerWidget {
                   TextSpan(text: '95', style: GoogleFonts.inter(
                     fontSize: 48, fontWeight: FontWeight.w700, color: VisoraColors.error)),
                   TextSpan(text: '/100', style: GoogleFonts.inter(
-                    fontSize: 20, fontWeight: FontWeight.w400, color: VisoraColors.onSurfaceVariant)),
+                    fontSize: 20, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.onSurfaceVariant)),
                 ])),
                 const SizedBox(height: 12),
                 Text('Immediate intervention required to prevent regulatory action.',
-                  style: GoogleFonts.inter(fontSize: 13, color: VisoraColors.onSurfaceVariant, height: 1.5)),
+                  style: GoogleFonts.inter(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5)),
               ])).animate().fadeIn(delay: 200.ms, duration: 400.ms).slideY(begin: 0.06),
 
               const SizedBox(height: 12),
@@ -86,12 +86,12 @@ class HumanCostScreen extends ConsumerWidget {
                     Icon(Icons.groups_rounded, color: VisoraColors.error, size: 20),
                     const SizedBox(width: 8),
                     Flexible(child: Text('Impact Scale', style: GoogleFonts.inter(
-                      fontSize: 14, fontWeight: FontWeight.w600, color: VisoraColors.onSurface))),
+                      fontSize: 14, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface))),
                   ]),
                   const SizedBox(height: 12),
-                  Text('2,847', style: GoogleFonts.inter(fontSize: 28, fontWeight: FontWeight.w700, color: VisoraColors.onSurface)),
+                  Text('2,847', style: GoogleFonts.inter(fontSize: 28, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface)),
                   const SizedBox(height: 4),
-                  Text('Unfair Decisions/Month', style: GoogleFonts.inter(fontSize: 11, color: VisoraColors.onSurfaceVariant)),
+                  Text('Unfair Decisions/Month', style: GoogleFonts.inter(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant)),
                 ]))),
                 const SizedBox(width: 12),
                 Expanded(child: VisoraCard(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -99,12 +99,12 @@ class HumanCostScreen extends ConsumerWidget {
                     Icon(Icons.account_balance_rounded, color: VisoraColors.error, size: 20),
                     const SizedBox(width: 8),
                     Flexible(child: Text('Financial Liability', style: GoogleFonts.inter(
-                      fontSize: 14, fontWeight: FontWeight.w600, color: VisoraColors.onSurface))),
+                      fontSize: 14, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface))),
                   ]),
                   const SizedBox(height: 12),
                   Text('\$4.27B', style: GoogleFonts.inter(fontSize: 28, fontWeight: FontWeight.w700, color: VisoraColors.error)),
                   const SizedBox(height: 4),
-                  Text('Projected Lawsuit Exposure', style: GoogleFonts.inter(fontSize: 11, color: VisoraColors.onSurfaceVariant)),
+                  Text('Projected Lawsuit Exposure', style: GoogleFonts.inter(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant)),
                 ]))),
               ]).animate().fadeIn(delay: 300.ms, duration: 400.ms).slideY(begin: 0.06),
 
@@ -113,7 +113,7 @@ class HumanCostScreen extends ConsumerWidget {
               // ── Demographic Disparity A/B Test ──
               VisoraCard(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text('Demographic Disparity Analysis (A/B Test)', style: GoogleFonts.inter(
-                  fontSize: 16, fontWeight: FontWeight.w600, color: VisoraColors.onSurface)),
+                  fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
                 const SizedBox(height: 20),
 
                 // Profile A
@@ -125,13 +125,13 @@ class HumanCostScreen extends ConsumerWidget {
                   child: Column(children: [
                     Container(width: 48, height: 48,
                       decoration: BoxDecoration(color: VisoraColors.surfaceHigh, shape: BoxShape.circle),
-                      child: const Icon(Icons.person_rounded, color: VisoraColors.onSurfaceVariant, size: 28)),
+                      child: Icon(Icons.person_rounded, color: Theme.of(context).colorScheme.onSurfaceVariant, size: 28)),
                     const SizedBox(height: 12),
                     Text('Priya Sharma', style: GoogleFonts.inter(
-                      fontSize: 16, fontWeight: FontWeight.w600, color: VisoraColors.onSurface)),
+                      fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
                     const SizedBox(height: 4),
                     Text('Original Candidate Profile', style: GoogleFonts.inter(
-                      fontSize: 12, color: VisoraColors.onSurfaceVariant)),
+                      fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant)),
                     const SizedBox(height: 12),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -162,10 +162,10 @@ class HumanCostScreen extends ConsumerWidget {
                       child: const Icon(Icons.person_rounded, color: VisoraColors.primary, size: 28)),
                     const SizedBox(height: 12),
                     Text('Peter Sharma', style: GoogleFonts.inter(
-                      fontSize: 16, fontWeight: FontWeight.w600, color: VisoraColors.onSurface)),
+                      fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
                     const SizedBox(height: 4),
                     Text('Modified Shadow Profile', style: GoogleFonts.inter(
-                      fontSize: 12, color: VisoraColors.onSurfaceVariant)),
+                      fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant)),
                     const SizedBox(height: 12),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -180,7 +180,7 @@ class HumanCostScreen extends ConsumerWidget {
 
               // ── Regulatory Compliance ──
               Text('Regulatory Compliance Status', style: GoogleFonts.inter(
-                fontSize: 18, fontWeight: FontWeight.w600, color: VisoraColors.onSurface))
+                fontSize: 18, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface))
                 .animate().fadeIn(delay: 500.ms),
               const SizedBox(height: 12),
 
@@ -228,7 +228,7 @@ class _RegItem extends StatelessWidget {
         child: Icon(icon, size: 18, color: isViolation ? VisoraColors.error : VisoraColors.success)),
       const SizedBox(width: 12),
       Expanded(child: Text(title, style: GoogleFonts.inter(
-        fontSize: 14, fontWeight: FontWeight.w500, color: VisoraColors.onSurface))),
+        fontSize: 14, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onSurface))),
       Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(

@@ -78,13 +78,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: 24),
 
                 Text('Visora', style: GoogleFonts.inter(
-                  fontSize: 32, fontWeight: FontWeight.w700, color: VisoraColors.onSurface, letterSpacing: -0.5))
+                  fontSize: 32, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface, letterSpacing: -0.5))
                   .animate().fadeIn(delay: 200.ms),
 
                 const SizedBox(height: 4),
 
                 Text('AI Bias Audit Platform', style: GoogleFonts.inter(
-                  fontSize: 14, color: VisoraColors.onSurfaceVariant))
+                  fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant))
                   .animate().fadeIn(delay: 300.ms),
 
                 const SizedBox(height: 40),
@@ -96,23 +96,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Admin Login', style: GoogleFonts.inter(
-                        fontSize: 20, fontWeight: FontWeight.w700, color: VisoraColors.onSurface)),
+                        fontSize: 20, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface)),
                       const SizedBox(height: 4),
                       Text('Enter your credentials to access the dashboard',
-                        style: GoogleFonts.inter(fontSize: 13, color: VisoraColors.onSurfaceVariant)),
+                        style: GoogleFonts.inter(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant)),
                       const SizedBox(height: 28),
 
                       // ── Username Field ──
                       Text('Username', style: GoogleFonts.inter(
-                        fontSize: 13, fontWeight: FontWeight.w600, color: VisoraColors.onSurface)),
+                        fontSize: 13, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
                       const SizedBox(height: 8),
                       TextField(
                         controller: _usernameController,
-                        style: GoogleFonts.inter(fontSize: 14, color: VisoraColors.onSurface),
+                        style: GoogleFonts.inter(fontSize: 14, color: Theme.of(context).colorScheme.onSurface),
                         decoration: InputDecoration(
                           hintText: 'Enter your username',
-                          hintStyle: GoogleFonts.inter(fontSize: 14, color: VisoraColors.onSurfaceVariant.withValues(alpha: 0.5)),
-                          prefixIcon: const Icon(Icons.person_outline_rounded, color: VisoraColors.onSurfaceVariant, size: 20),
+                          hintStyle: GoogleFonts.inter(fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5)),
+                          prefixIcon: Icon(Icons.person_outline_rounded, color: Theme.of(context).colorScheme.onSurfaceVariant, size: 20),
                           filled: true,
                           fillColor: VisoraColors.background,
                           border: OutlineInputBorder(
@@ -133,23 +133,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                       // ── Password Field ──
                       Text('Password', style: GoogleFonts.inter(
-                        fontSize: 13, fontWeight: FontWeight.w600, color: VisoraColors.onSurface)),
+                        fontSize: 13, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
                       const SizedBox(height: 8),
                       TextField(
                         controller: _passwordController,
                         obscureText: _obscurePassword,
-                        style: GoogleFonts.inter(fontSize: 14, color: VisoraColors.onSurface),
+                        style: GoogleFonts.inter(fontSize: 14, color: Theme.of(context).colorScheme.onSurface),
                         decoration: InputDecoration(
                           hintText: 'Enter your password',
-                          hintStyle: GoogleFonts.inter(fontSize: 14, color: VisoraColors.onSurfaceVariant.withValues(alpha: 0.5)),
-                          prefixIcon: const Icon(Icons.lock_outline_rounded, color: VisoraColors.onSurfaceVariant, size: 20),
+                          hintStyle: GoogleFonts.inter(fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5)),
+                          prefixIcon: Icon(Icons.lock_outline_rounded, color: Theme.of(context).colorScheme.onSurfaceVariant, size: 20),
                           suffixIcon: MouseRegion(
                             cursor: SystemMouseCursors.click,
                             child: GestureDetector(
                               onTap: () => setState(() => _obscurePassword = !_obscurePassword),
                               child: Icon(
                                 _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                                color: VisoraColors.onSurfaceVariant, size: 20),
+                                color: Theme.of(context).colorScheme.onSurfaceVariant, size: 20),
                             ),
                           ),
                           filled: true,
@@ -181,7 +181,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           )),
                         const SizedBox(width: 8),
                         Text('Remember me', style: GoogleFonts.inter(
-                          fontSize: 13, color: VisoraColors.onSurfaceVariant)),
+                          fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant)),
                         const Spacer(),
                         MouseRegion(cursor: SystemMouseCursors.click,
                           child: GestureDetector(
@@ -247,12 +247,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Icon(Icons.shield_rounded, color: VisoraColors.success, size: 16),
                   const SizedBox(width: 6),
                   Text('End-to-end encrypted', style: GoogleFonts.inter(
-                    fontSize: 12, color: VisoraColors.onSurfaceVariant)),
+                    fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant)),
                   const SizedBox(width: 16),
-                  Icon(Icons.lock_rounded, color: VisoraColors.onSurfaceVariant, size: 14),
+                  Icon(Icons.lock_rounded, color: Theme.of(context).colorScheme.onSurfaceVariant, size: 14),
                   const SizedBox(width: 4),
                   Text('AES-256', style: GoogleFonts.inter(
-                    fontSize: 12, color: VisoraColors.onSurfaceVariant)),
+                    fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant)),
                 ]).animate().fadeIn(delay: 600.ms),
 
                 const SizedBox(height: 32),
